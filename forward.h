@@ -21,23 +21,17 @@ class ValueError;
 template <typename T>
 class ref;
 
-using object = ref<Object>;
-using float_ = ref<Float>;
-using bool_ = ref<Bool>;
-using int_ = ref<Int>;
-using str = ref<String>;
-
-template <typename T = Object>
+class object;
+class bool_;
+class int_;
+class float_;
+class str;
+class none;
 class list;
-
-template <typename T = Object>
+class dict;
+class set;
 class tuple;
 
-template <typename T = Object>
-class set;
-
-template <typename K = Object, typename V = Object>
-class dict;
 
 extern NoneType* None;
 extern Bool *True, *False;

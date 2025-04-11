@@ -6,9 +6,9 @@
 template <typename T>
 class ref {
  public:
-  ref() : ptr_(nullptr) {}
+  constexpr ref() : ptr_(nullptr) {}
 
-  ref(std::nullptr_t) : ref() {}
+  constexpr ref(std::nullptr_t) : ref() {}
 
   template <typename U, std::enable_if_t<std::is_convertible<U*, T*>::value &&
                                          !std::is_same<U, T>::value>>
@@ -56,16 +56,8 @@ class ref {
     return ptr_;
   }
 
-  explicit operator bool() const { return ptr_->__bool__().value(); }
-  explicit operator double() const { return ptr_->__float__().value(); }
-
  private:
   T* ptr_;
 };
-
-template <typename T, typename U>
-bool operator==(ref<T> lhs, ref<U> rhs) {
-  return lhs->__eq__(rhs);
-}
 
 #endif
