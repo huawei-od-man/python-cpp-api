@@ -5,7 +5,7 @@
 
 #include "object.h"
 
-class Set : public Object {
+class Set : public object {
  public:
   Set() = default;
   ~Set() override;

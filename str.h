@@ -6,7 +6,7 @@
 #include "object.h"
 #include "tuple.h"
 
-class String : public Object {
+class String : public object {
 public:
  explicit String(const std::string &str);
  explicit String(const char *c_str);

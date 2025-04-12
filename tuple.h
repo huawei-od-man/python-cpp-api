@@ -4,7 +4,7 @@
 #include "object.h"
 #include <vector>
 
-class Tuple : public Object {
+class Tuple : public object {
 public:
     Tuple() = default;
     ~Tuple() override;
@@ -14,7 +14,7 @@ public:
 
     object __getitem__(object key) override;
     void __setitem__(object key, object value) override;
-    
+
     str __str__() override;
 
 

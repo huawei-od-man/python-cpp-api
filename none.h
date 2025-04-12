@@ -3,7 +3,7 @@
 
 #include "object.h"
 
-class NoneType : public Object {
+class NoneType : public object {
 public:
     NoneType() {}
     ~NoneType() override {}

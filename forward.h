@@ -23,4 +23,6 @@ class dict;
 class set;
 class tuple;
 
+using float_type = long double;
+
 #endif  // FORWARD_H

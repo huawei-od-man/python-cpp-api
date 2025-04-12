@@ -3,7 +3,7 @@
 
 #include "object.h"
 
-class Int : public Object {
+class Int : public object {
 public:
     explicit Int(int value);
     ~Int() override;

@@ -1,46 +1,44 @@
 #ifndef OBJECT_H
 #define OBJECT_H
-
-#include <atomic>
-
 #include "forward.h"
-#include "ref.h"
 
-class Object {
+class object {
  public:
-  Object();
-  virtual ~Object() = default;
-  virtual bool_ __bool__();
-  virtual str __str__();
-  virtual int_ __int__();
-  virtual float_ __float__();
+  object() = default;
+  virtual ~object() = default;
 
-  virtual bool_ __eq__(object other);
-  virtual bool_ __ne__(object other);
-  virtual bool_ __lt__(ref<Object> other);
-  virtual bool_ __le__(ref<Object> other);
-  virtual bool_ __gt__(ref<Object> other);
-  virtual bool_ __ge__(ref<Object> other);
+  virtual bool to_bool() const { return true; }
+  explicit operator bool() const { return to_bool(); }
 
-  virtual object __getitem__(object key);
-  virtual void __setitem__(object key, object value);
-  virtual void __delitem__(object key);
-  virtual int_ __len__();
+  virtual float_type to_float() const = 0;
+  operator float_type() const { return to_float(); }
 
-  virtual object __add__(object other);
-  virtual object __sub__(object other);
-  virtual object __mul__(object other);
-  virtual object __truediv__(object other);
-  virtual object __mod__(object other);
-  virtual object __pow__(object other);
+  virtual size_t hash() const { return reinterpret_cast<size_t>(this); }
+  virtual size_t size() const = 0;
+  virtual const char* type_name() const {
+    return "object";
+  }
 
-  void add_ref();
-  void dec_ref();
-  void release();
-  int32_t ref_count() const;
+  virtual bool eq(const object& other) const {
+    return this == &other;
+  }
+  virtual bool neq(const object& other) const {
+    return !eq(other);
+  }
+  friend bool operator==(const object& lhs, const object& rhs) {
+    return lhs.eq(rhs);
+  }
+  friend bool operator!=(const object& lhs, const object& rhs) {
+    return lhs.neq(rhs);
+  }
 
- private:
-  std::atomic_int32_t _ref_count;
+  virtual bool lt(const object& other) const {
+    return this < &other;
+  }
+  friend bool operator<(const object& lhs, const object& rhs) {
+    return lhs.lt(rhs);
+  }
+
 };
 
-#endif
+#endif  // OBJECT_H

@@ -7,7 +7,7 @@
 #include "object.h"
 #include "ref.h"
 
-class List : public Object {
+class List : public object {
  public:
   List() = default;
   ~List() override;
