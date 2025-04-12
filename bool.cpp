@@ -2,19 +2,19 @@
 
 #include "str.h"
 
-Bool *True, *False;
+bool_ *True, *False;
 
-Bool::Bool(bool value) : _value(value) {}
+bool_::bool_(bool value) : _value(value) {}
 
-Bool::~Bool() = default;
+bool_::~bool_() = default;
 
-str Bool::__str__() { return new String(_value ? "True" : "False"); }
+str bool_::__str__() { return new String(_value ? "True" : "False"); }
 
-bool_ Bool::__bool__() { return ref<Bool>(this); }
+bool_ bool_::__bool__() { return ref<bool_>(this); }
 
-bool_ Bool::__eq__(object other) { return True; }
+bool_ bool_::__eq__(object other) { return True; }
 
-bool_ Bool::__ne__(object other) {
+bool_ bool_::__ne__(object other) {
   //   auto other_bool = other.is<Bool>();
   return False;
 }

@@ -2,6 +2,6 @@
 
 void python_initialize() {
     None = new NoneType();
-    True = new Bool(true);
-    False = new Bool(false);
+    True = new bool_(true);
+    False = new bool_(false);
 }
