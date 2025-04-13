@@ -3,24 +3,13 @@
 
 #include <unordered_set>
 
-#include "object.h"
+#include "ref.h"
 
-class Set : public object {
- public:
-  Set() = default;
-  ~Set() override;
-  virtual void add(object item);
+class set {
+  public:
 
- private:
-  std::unordered_set<object> _elements;
-};
-
-template <typename V>
-class set : public ref<Set> {
- public:
-  set() : ref<Set>(new Set()) {}
-  ~set() = default;
-  void add(V value);
+  private:
+  std::unordered_set<ref> _items;
 };
 
 #endif  // SET_H

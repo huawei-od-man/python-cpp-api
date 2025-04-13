@@ -1,29 +1,41 @@
 #ifndef LIST_H
 #define LIST_H
 
-#include <stdexcept>
 #include <vector>
-
-#include "object.h"
+#include "except.h"
 #include "ref.h"
 
-class List : public object {
+class list {
  public:
-  List() = default;
-  ~List() override;
-  bool_ __eq__(object other) override;
-  bool_ __ne__(object other) override;
-  str __str__() override;
-  int_ __len__() override;
-  object __getitem__(object index) override;
-  void __setitem__(object index, object value) override;
-  void __delitem__(object index) override;
+  list() noexcept = default;
+  ~list() noexcept = default;
 
-  virtual void insert(object index, object value);
-  virtual void append(object value);
+  list(const list&) = default;
+  list(list&&) noexcept = default;
+  list& operator=(const list&) = default;
+  list& operator=(list&&) noexcept = default;
+
+  void append(ref item) {
+    _items.push_back(item);
+  }
+
+  template <typename T>
+  void append(T&& item) {
+    _items.push_back(make_ref(std::forward<T>(item)));
+  }
+
+  ref& operator[](size_t index);
+
+  const ref& operator[](size_t index) const;
+
+  size_t size() const noexcept { return _items.size(); }
+
+  explicit operator bool() const noexcept {
+    return !_items.empty();
+  }
 
  private:
-  std::vector<object> _items;
+  std::vector<ref> _items;
 };
 
 #endif

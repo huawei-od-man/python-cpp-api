@@ -3,11 +3,16 @@
 
 #include <ostream>
 
+class ref;
+
 class bool_ {
  public:
+  bool_(ref obj);
+
   constexpr explicit bool_(bool value) noexcept : _value(value) {}
   constexpr bool_() noexcept = default;
   ~bool_() noexcept = default;
+
   constexpr bool_(const bool_&) noexcept = default;
   constexpr bool_(bool_&&) noexcept = default;
   constexpr bool_& operator=(const bool_&) noexcept = default;

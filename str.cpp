@@ -1,7 +1,6 @@
 #include "str.h"
 
-String::String(const char *c_str) : _string(c_str) {}
+#include "object.h"
+#include "ref.h"
 
-String::~String() = default;
-
-str String::__str__() { return ref<String>(this); }
+str::str(ref obj) : str(obj->to_str()) {}

@@ -1,18 +1,16 @@
 #ifndef NONE_H
 #define NONE_H
+#include <iostream>
 
-#include "object.h"
+struct NoneType {
+  constexpr NoneType() noexcept = default;
+  ~NoneType() noexcept = default;
 
-class NoneType : public object {
-public:
-    NoneType() {}
-    ~NoneType() override {}
-
-    bool_ __bool__() override;
-    bool_ __eq__(object other) override;
-    bool_ __ne__(object other) override;
-
-    str __str__() override;
+  constexpr explicit operator bool() const noexcept { return false; }
+  
+  friend std::ostream& operator<<(std::ostream& os, const NoneType&) {
+    return os << "None";
+  }
 };
 
-#endif // NONE_H
+#endif  // NONE_H

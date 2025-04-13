@@ -1,37 +1,56 @@
 #ifndef INT_H
 #define INT_H
+#include <cstdint>
+#include <ostream>
 
-#include "object.h"
+class int_ {
+ public:
+  constexpr int_() noexcept = default;
+  ~int_() noexcept = default;
+  constexpr int_(int64_t value) noexcept : _value(value) {}
+  constexpr int_(const int_&) noexcept = default;
+  constexpr int_(int_&&) noexcept = default;
+  constexpr int_& operator=(const int_&) noexcept = default;
+  constexpr int_& operator=(int_&&) noexcept = default;
 
-class Int : public object {
-public:
-    explicit Int(int value);
-    ~Int() override;
+  constexpr explicit operator bool() const noexcept { return _value != 0; }
+  constexpr explicit operator int64_t() const noexcept { return _value; }
+  constexpr explicit operator long double() const noexcept {
+    return static_cast<long double>(_value);
+  }
+  constexpr explicit operator double() const noexcept {
+    return static_cast<double>(_value);
+  }
 
-    bool_ __eq__(object other) override;
-    bool_ __ne__(object other) override;
+  friend std::ostream& operator<<(std::ostream& os, const int_& i) {
+    return os << i._value;
+  }
 
-    bool_ __lt__(object other) override;
-    bool_ __le__(object other) override;
-    bool_ __gt__(object other) override;
-    bool_ __ge__(object other) override;
-    object __add__(object other) override;
-    object __sub__(object other) override;
-    object __mul__(object other) override;
-    object __truediv__(object other) override;
-    object __mod__(object other) override;
-    object __pow__(object other) override;
-    object __neg__();
-    object __abs__();
-    object __floordiv__(object other);
+  friend bool operator==(const int_& lhs, const int_& rhs) {
+    return lhs._value == rhs._value;
+  }
+  friend bool operator!=(const int_& lhs, const int_& rhs) {
+    return lhs._value != rhs._value;
+  }
+  friend bool operator<(const int_& lhs, const int_& rhs) {
+    return lhs._value < rhs._value;
+  }
+  friend bool operator<=(const int_& lhs, const int_& rhs) {
+    return lhs._value <= rhs._value;
+  }
+  friend bool operator>(const int_& lhs, const int_& rhs) {
+    return lhs._value > rhs._value;
+  }
+  friend bool operator>=(const int_& lhs, const int_& rhs) {
+    return lhs._value >= rhs._value;
+  }
 
-    int_ __int__() override;
-    str __str__() override;
-
-private:
-    int _value;
+ private:
+  int64_t _value{0};
 };
 
-int_ operator""_I(unsigned long long value);
+inline int_ operator""_i(unsigned long long value) {
+  return int_(static_cast<int64_t>(value));
+}
 
 #endif

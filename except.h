@@ -15,8 +15,13 @@ class Exception : public std::exception {
 };
 
 class NotImplementedError : public Exception {
-public:
-    explicit NotImplementedError(const char *message);
+ public:
+  explicit NotImplementedError(const char *message);
+};
+
+class IndexError : public Exception {
+ public:
+  explicit IndexError(const char *message);
 };
 
 #endif

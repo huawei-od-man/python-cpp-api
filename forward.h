@@ -8,9 +8,7 @@ class ValueError;
 class KeyError;
 
 class ref;
-class cref;
 class weak_ref;
-class weak_cref;
 
 class object;
 class bool_;

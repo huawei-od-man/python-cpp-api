@@ -1,23 +1,34 @@
 #ifndef STR_H
 #define STR_H
 #include <string>
+#include "forward.h"
 
-#include "ref.h"
-#include "object.h"
-#include "tuple.h"
+class str {
+ public:
+  str(const char* str) : _string(str) {}
+  str(std::string_view str) noexcept : _string(str) {}
+  str(const std::string& str) : _string(str) {}
+  str(std::string&& str) noexcept : _string(std::move(str)) {}
+  str(ref obj);
 
-class String : public object {
-public:
- explicit String(const std::string &str);
- explicit String(const char *c_str);
- ~String() override;
+  str() noexcept = default;
+  ~str() = default;
+  str(const str&) = default;
+  str(str&&) noexcept = default;
+  str& operator=(const str&) = default;
+  str& operator=(str&&) noexcept = default;
 
- virtual str format(tuple<> arguments);
+  explicit operator bool() const { return !_string.empty(); }
+  size_t size() const { return _string.size(); }
 
- str __str__() override;
+  str format(tuple args) const;
 
-private:
- std::string _string;
+ private:
+  std::string _string;
 };
+
+str operator""_s(const char* s, size_t) {
+  return str(s);
+}
 
 #endif
