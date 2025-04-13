@@ -34,7 +34,7 @@ class bool_ {
     return value() != other;
   }
   friend std::ostream& operator<<(std::ostream& os, const bool_& b) {
-    return os << (b.value() ? "true" : "false");
+    return os << (b.value() ? "True" : "False");
   }
 
  private:

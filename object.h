@@ -21,8 +21,8 @@ class object {
   virtual bool to_bool() const { return true; }
   explicit operator bool() const { return to_bool(); }
 
-  virtual float_type to_float() const;
-  operator float_type() const { return to_float(); }
+  virtual float_ to_float() const;
+  operator double() const;
 
   virtual size_t hash() const { return reinterpret_cast<uintptr_t>(this); }
   virtual size_t size() const;

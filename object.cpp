@@ -3,11 +3,17 @@
 #include "str.h"
 #include "tuple.h"
 #include "iter.h"
+#include "floating_point.h"
+#include "except.h"
 
 str object::to_str() const { return ""; }
 
-float_type object::to_float() const {
+float_ object::to_float() const {
   throw NotImplementedError("to_float method not implemented");
+}
+
+object::operator double() const {
+  return static_cast<double>(to_float());
 }
 
 size_t object::size() const {

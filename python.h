@@ -1,6 +1,3 @@
-#ifndef PYTHON_H
-#define PYTHON_H
-
 #include "forward.h"
 #include "object.h"
 #include "bool.h"
@@ -11,5 +8,4 @@
 #include "list.h"
 #include "set.h"
 #include "none.h"
-
-#endif
+#include "box.h"

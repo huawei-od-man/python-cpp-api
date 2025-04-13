@@ -18,10 +18,21 @@ class ref {
 
   constexpr object* operator->() const noexcept { return _ptr.get(); }
   constexpr object& operator*() const noexcept { return *_ptr; }
+  explicit operator bool() const noexcept { return _ptr != nullptr; }
 
  private:
   std::shared_ptr<object> _ptr;
 };
+
+inline
+std::ostream& operator<<(std::ostream& os, const ref& obj) {
+  if (obj) {
+    obj->format(os);
+  } else {
+    os << "None";
+  }
+  return os;
+}
 
 namespace std {
 template <>

@@ -2,8 +2,11 @@
 #define LIST_H
 
 #include <vector>
+#include <iosfwd>
+
 #include "except.h"
 #include "ref.h"
+#include "box.h"
 
 class list {
  public:
@@ -21,7 +24,7 @@ class list {
 
   template <typename T>
   void append(T&& item) {
-    _items.push_back(make_ref(std::forward<T>(item)));
+    _items.push_back(make_box<T>(std::forward<T>(item)));
   }
 
   ref& operator[](size_t index);
@@ -36,7 +39,7 @@ class list {
 
   class iter : public object {
     public:
-    // explicit 
+    // explicit
      ref next() override;
 
   };
@@ -44,5 +47,7 @@ class list {
  private:
   std::vector<ref> _items;
 };
+
+std::ostream& operator<<(std::ostream& os, const list& lst);
 
 #endif
