@@ -4,24 +4,29 @@
 #include <string>
 
 #include "forward.h"
+#include "str.h"
 
 class Exception : public std::exception {
  public:
-  explicit Exception(const char *message);
-  const char *what() const noexcept override;
+  explicit Exception(str message) : _message(std::move(message)) {};
+  const char *what() const noexcept override {
+    return _message.c_str();
+  }
+
+  const str& message() const noexcept { return _message; }
 
  private:
-  std::string _message;
+  str _message;
 };
 
 class NotImplementedError : public Exception {
  public:
-  explicit NotImplementedError(const char *message);
+  explicit NotImplementedError(str message) : Exception(std::move(message)) {}
 };
 
 class IndexError : public Exception {
  public:
-  explicit IndexError(const char *message);
+  explicit IndexError(str message) : Exception(std::move(message)) {}
 };
 
 #endif

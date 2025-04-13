@@ -4,6 +4,7 @@
 
 #include "forward.h"
 
+
 class object {
  public:
   object() = default;
@@ -20,16 +21,14 @@ class object {
   virtual bool to_bool() const { return true; }
   explicit operator bool() const { return to_bool(); }
 
-  virtual float_type to_float() const = 0;
+  virtual float_type to_float() const;
   operator float_type() const { return to_float(); }
 
   virtual size_t hash() const { return reinterpret_cast<uintptr_t>(this); }
-  virtual size_t size() const = 0;
-  virtual const char* type_name() const {
-    return "object";
-  }
+  virtual size_t size() const;
+  virtual const char* type_name() const { return "object"; }
 
-  void format(std::ostream& os) const {
+  virtual void format(std::ostream& os) const {
     os << type_name() << " object at " << this;
   }
   friend std::ostream& operator<<(std::ostream& os, const object& obj) {
@@ -37,12 +36,8 @@ class object {
     return os;
   }
 
-  virtual bool eq(const object& other) const {
-    return this == &other;
-  }
-  virtual bool neq(const object& other) const {
-    return !eq(other);
-  }
+  virtual bool eq(const object& other) const { return this == &other; }
+  virtual bool neq(const object& other) const { return !eq(other); }
   friend bool operator==(const object& lhs, const object& rhs) {
     return lhs.eq(rhs);
   }
@@ -50,13 +45,22 @@ class object {
     return lhs.neq(rhs);
   }
 
-  virtual bool lt(const object& other) const {
-    return this < &other;
-  }
+  virtual bool lt(const object& other) const { return this < &other; }
   friend bool operator<(const object& lhs, const object& rhs) {
     return lhs.lt(rhs);
   }
-};
 
+  virtual ref call(tuple args);
+
+  template <typename... Args>
+  ref operator()(Args&&... args);
+
+  virtual iterator get_iter() const;
+  const iterator begin() const;
+  const iterator end() const;
+
+  virtual ref next();
+
+};
 
 #endif  // OBJECT_H

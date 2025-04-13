@@ -34,6 +34,13 @@ class list {
     return !_items.empty();
   }
 
+  class iter : public object {
+    public:
+    // explicit 
+     ref next() override;
+
+  };
+
  private:
   std::vector<ref> _items;
 };

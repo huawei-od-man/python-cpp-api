@@ -23,11 +23,13 @@ class str {
 
   str format(tuple args) const;
 
+  const char* c_str() const { return _string.c_str(); }
+
  private:
   std::string _string;
 };
 
-str operator""_s(const char* s, size_t) {
+inline str operator""_s(const char* s, size_t) {
   return str(s);
 }
 

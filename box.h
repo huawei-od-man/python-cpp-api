@@ -2,6 +2,7 @@
 #define BOX_H
 #include <type_traits>
 
+#include "except.h"
 #include "object.h"
 
 // 检查 T 是否有一个返回类型为 size_t 的 size() 方法
@@ -18,32 +19,37 @@ class box : public object {
                 "T must not be derived from object");
 
  public:
-  explicit box(const T& value) : _value(value) {}
-  explicit box(T&& value) : _value(std::move(value)) {}
+  box() noexcept(T()) = default;
 
+  explicit box(const T& value) noexcept(
+      std::is_nothrow_copy_constructible<T>::value)
+      : _value(value) {}
+  explicit box(T&& value) noexcept(std::is_nothrow_move_constructible<T>::value)
+      : _value(std::move(value)) {}
+
+  box(const box&) noexcept(T(std::declval<const T&>())) = default;
   ~box() override = default;
 
   const char* type_name() const override { return typeid(T).name(); }
 
-  // 仅当 T 有 size() 方法时重写 size()
-  template <typename U = T,
-            typename std::enable_if<has_size_method<U>::value, int>::type = 0>
   std::size_t size() const override {
-    return _value.size();
+    if constexpr (has_size_method<T>::value) {
+      return _value.size();
+    } else {
+      throw NotImplementedError("size() method is not implemented");
+    }
   }
 
  private:
   T _value{};
 };
 
-template <typename T>
-ref make_ref(T&& obj) {
-  return ref(std::make_shared<box<T>>(std::forward<T>(obj)));
-}
-
 template <typename T, typename... Args>
 ref make_box(Args&&... args) {
   return ref(std::make_shared<box<T>>(std::forward<Args>(args)...));
 }
+inline ref make_box(const ref& obj) { return obj; }
+
+inline ref make_box(ref&& obj) { return std::move(obj); }
 
 #endif  // BOX_H

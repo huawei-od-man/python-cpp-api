@@ -26,4 +26,6 @@ install(TARGETS Python
     RUNTIME DESTINATION bin
 )
 
-install(FILES dynamic_types.h DESTINATION include)
+add_executable(main main.cpp)
+
+target_link_libraries(main Python)
