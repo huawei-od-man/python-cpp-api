@@ -1,6 +1,8 @@
 #include "list.h"
-
 #include <iostream>
+
+#include "except.h"
+
 
 std::ostream& operator<<(std::ostream& os, const list& lst) {
   os << "[";

@@ -2,11 +2,15 @@
 #define BOX_H
 #include <type_traits>
 
-#include "except.h"
 #include "bool.h"
+#include "dict.h"
+#include "except.h"
 #include "floating_point.h"
+#include "int.h"
+#include "list.h"
 #include "object.h"
 #include "ref.h"
+#include "set.h"
 #include "str.h"
 #include "tuple.h"
 
@@ -86,6 +90,8 @@ ref make_box(Args&&... args) {
     return ref(std::make_shared<box<float_>>(std::forward<Args>(args)...));
   } else if constexpr (std::is_same<T, bool>::value) {
     return ref(std::make_shared<box<bool_>>(std::forward<Args>(args)...));
+  } else if constexpr (std::is_integral<T>::value) {
+    return ref(std::make_shared<box<int_>>(std::forward<Args>(args)...));
   } else if constexpr (std::is_base_of<object, T>::value) {
     return ref(std::make_shared<T>(std::forward<Args>(args)...));
   } else {
@@ -103,6 +109,30 @@ tuple::tuple(Args&&... args) {
   _items.reserve(sizeof...(args));
   (void)std::initializer_list<int>{
       (_items.emplace_back(make_box<Args>(std::forward<Args>(args))), 0)...};
+}
+
+template <typename... Args>
+list::list(Args&&... args) {
+  _items.reserve(sizeof...(args));
+  (void)std::initializer_list<int>{
+      (_items.emplace_back(make_box<Args>(std::forward<Args>(args))), 0)...};
+}
+
+template <typename T>
+void list::append(T&& item) {
+  _items.emplace_back(make_box<T>(std::forward<T>(item)));
+}
+
+template <typename T>
+ref& dict::operator[](T&& key) {
+  return (*this)[make_box<T>(std::forward<T>(key))];
+}
+
+template <typename... Args>
+set::set(Args&&... args) {
+  _items.reserve(sizeof...(args));
+  (void)std::initializer_list<int>{
+      (_items.insert(make_box<Args>(std::forward<Args>(args))), 0)...};
 }
 
 #endif  // BOX_H

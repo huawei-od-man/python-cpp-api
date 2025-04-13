@@ -9,3 +9,7 @@
 #include "set.h"
 #include "none.h"
 #include "box.h"
+#include "dict.h"
+#include "tuple.h"
+#include "iter.h"
+#include "ref.h"

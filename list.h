@@ -4,9 +4,7 @@
 #include <vector>
 #include <iosfwd>
 
-#include "except.h"
 #include "ref.h"
-#include "box.h"
 
 class list {
  public:
@@ -18,14 +16,15 @@ class list {
   list& operator=(const list&) = default;
   list& operator=(list&&) noexcept = default;
 
+  template <typename... Args>
+  explicit list(Args&&... args);
+
   void append(ref item) {
     _items.push_back(item);
   }
 
   template <typename T>
-  void append(T&& item) {
-    _items.push_back(make_box<T>(std::forward<T>(item)));
-  }
+  void append(T&& item);
 
   ref& operator[](size_t index);
 

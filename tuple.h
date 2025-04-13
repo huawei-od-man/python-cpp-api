@@ -33,6 +33,7 @@ class tuple {
   const ref& operator[](size_t index) {
     return const_cast<const tuple&>(*this)[index];
   }
+  friend tuple operator+(const tuple& lhs, const tuple& rhs);
 
  private:
   std::vector<ref> _items;

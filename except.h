@@ -36,4 +36,16 @@ class ZeroDivisionError : public Exception {
   explicit ZeroDivisionError(const char* message);
 };
 
+class KeyError : public Exception {
+ public:
+  explicit KeyError(str message);
+  explicit KeyError(const char* message);
+};
+
+class ValueError : public Exception {
+ public:
+  explicit ValueError(str message);
+  explicit ValueError(const char* message);
+};
+
 #endif

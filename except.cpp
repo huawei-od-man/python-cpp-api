@@ -14,6 +14,12 @@ IndexError::IndexError(const char* message) : IndexError(str(message)) {}
 
 ZeroDivisionError::ZeroDivisionError(str message)
     : Exception(std::move(message)) {}
-    
+
 ZeroDivisionError::ZeroDivisionError(const char* message)
     : ZeroDivisionError(str(message)) {}
+
+KeyError::KeyError(str message) : Exception(std::move(message)) {}
+KeyError::KeyError(const char* message) : KeyError(str(message)) {}
+
+ValueError::ValueError(str message) : Exception(std::move(message)) {}
+ValueError::ValueError(const char* message) : ValueError(str(message)) {}
