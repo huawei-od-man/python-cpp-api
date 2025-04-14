@@ -16,8 +16,7 @@ class list {
   list& operator=(const list&) = default;
   list& operator=(list&&) noexcept = default;
 
-  template <typename... Args>
-  explicit list(Args&&... args);
+   list(std::initializer_list<ref> items);
 
   void append(ref item) {
     _items.push_back(item);

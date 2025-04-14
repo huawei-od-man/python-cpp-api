@@ -7,10 +7,18 @@
 
 class ref {
  public:
+  template <typename T>
+  ref(T&& value);
+
   ref() = default;
 
   explicit ref(std::shared_ptr<object> ptr) noexcept : _ptr(std::move(ptr)) {}
 
+  template <typename T>
+  explicit ref(std::shared_ptr<box<T>> box_ptr) noexcept
+      : _ptr(std::move(box_ptr)) {}
+      
+  ref(ref& other) noexcept : _ptr(other._ptr) {}
   ref(const ref&) noexcept = default;
   ref(ref&&) noexcept = default;
   ref& operator=(const ref&) noexcept = default;

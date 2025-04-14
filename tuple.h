@@ -14,9 +14,6 @@ class tuple {
   explicit tuple(const list& items);
   explicit tuple(const set& items);
 
-  template <typename... Args>
-  explicit tuple(Args&&... args);
-
   tuple(std::initializer_list<ref> items);
 
   ~tuple() noexcept = default;

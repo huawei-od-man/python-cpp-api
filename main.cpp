@@ -1,7 +1,7 @@
 #include "python.h"
 
 int main() {
-  list lst{3.14_f, true, 1_i, "hello"_s};
+  list lst{3.14_f, true, 1_i, "hello"};
 
   std::cout << lst << std::endl;
 
@@ -14,9 +14,9 @@ int main() {
 
   std::cout << tuple{1, 2, 3} + tuple{None(), 5, 6} << std::endl;
 
-  auto d = dict{tuple{1, 2}, tuple{3, 4}, tuple{5, 6}};
+  auto d = dict{{"hello", 2}, {3, 4}, {5, 6}};
 
-  std::cout << d << std::endl;
+  std::cout << d << d["hello"] << std::endl;
 
   set s{1, 2, 3, 4, 5};
   std::cout << s << std::endl;

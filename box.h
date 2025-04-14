@@ -51,7 +51,7 @@ class box : public object {
     if constexpr (has_size_method<T>::value) {
       return _value.size();
     } else {
-      throw NotImplementedError("size() method is not implemented");
+      return object::size();
     }
   }
 
@@ -59,8 +59,7 @@ class box : public object {
     if constexpr (has_operator_insertion<T>::value) {
       os << _value;
     } else {
-      throw NotImplementedError(
-          "operator<< is not implemented for type {}"_s.format(type_name()));
+      object::format(os);
     }
   }
 
@@ -68,7 +67,7 @@ class box : public object {
     if constexpr (std::is_convertible<T, bool>::value) {
       return static_cast<bool>(_value);
     } else {
-      throw NotImplementedError("to_bool() method is not implemented");
+      return object::to_bool();
     }
   }
 
@@ -76,7 +75,7 @@ class box : public object {
     if constexpr (std::is_same<T, float_>::value) {
       return _value;
     } else {
-      throw NotImplementedError("to_float() method is not implemented");
+      return object::to_float();
     }
   }
 
@@ -92,6 +91,8 @@ ref make_box(Args&&... args) {
     return ref(std::make_shared<box<bool_>>(std::forward<Args>(args)...));
   } else if constexpr (std::is_integral<T>::value) {
     return ref(std::make_shared<box<int_>>(std::forward<Args>(args)...));
+  } else if constexpr (std::is_same_v<std::decay_t<T>, const char*>) {
+    return ref(std::make_shared<box<str>>(std::forward<Args>(args)...));
   } else if constexpr (std::is_base_of<object, T>::value) {
     return ref(std::make_shared<T>(std::forward<Args>(args)...));
   } else {
@@ -99,23 +100,13 @@ ref make_box(Args&&... args) {
   }
 }
 
+template <typename T>
+ref::ref(T&& value)
+    : ref(make_box<T>(std::forward<T>(value))) {}
+
 template <typename... Args>
 str str::format(Args&&... args) const {
-  return format(tuple(std::forward<Args>(args)...));
-}
-
-template <typename... Args>
-tuple::tuple(Args&&... args) {
-  _items.reserve(sizeof...(args));
-  (void)std::initializer_list<int>{
-      (_items.emplace_back(make_box<Args>(std::forward<Args>(args))), 0)...};
-}
-
-template <typename... Args>
-list::list(Args&&... args) {
-  _items.reserve(sizeof...(args));
-  (void)std::initializer_list<int>{
-      (_items.emplace_back(make_box<Args>(std::forward<Args>(args))), 0)...};
+  return format(tuple{std::forward<Args>(args)...});
 }
 
 template <typename T>

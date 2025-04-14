@@ -3,6 +3,12 @@
 
 #include "except.h"
 
+list::list(std::initializer_list<ref> items) {
+  _items.reserve(items.size());
+  for (const auto& item : items) {
+    _items.push_back(item);
+  }
+}
 
 std::ostream& operator<<(std::ostream& os, const list& lst) {
   os << "[";

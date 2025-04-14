@@ -7,6 +7,8 @@ class TypeError;
 class ValueError;
 class KeyError;
 
+template <typename T>
+class box;
 class ref;
 class weak_ref;
 
