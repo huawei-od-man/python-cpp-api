@@ -88,16 +88,17 @@ class box : public object {
   }
 
   ref add(ref other) const override {
-    if constexpr (has_add_method<T>::value && std::is_constructible_v<T, ref>) {
-      const auto rhs = T(other);
-      const auto result = _value + rhs;
-      return make_box<decltype(result)>(result);
+    if constexpr (has_add_method<T>::value) {
+      const auto result = _value + other.as<T>();
+      return make_box<decltype(result)>(std::move(result));
     } else {
       return object::add(other);
     }
   }
 
  private:
+  friend class ref;
+
   T _value{};
 };
 
@@ -116,6 +117,11 @@ ref make_box(Args&&... args) {
   } else {
     return ref(std::make_shared<box<T>>(std::forward<Args>(args)...));
   }
+}
+
+template <>
+inline ref make_box<bool, bool>(bool&& value) {
+  return value ? True : False;
 }
 
 template <typename T>
@@ -144,6 +150,11 @@ const T& ref::as() const {
 template <typename... Args>
 str str::format(Args&&... args) const {
   return format(tuple{std::forward<Args>(args)...});
+}
+
+template <typename... Args>
+ref ref::operator()(Args&&... args) {
+  return _ptr->call(tuple{std::forward<Args>(args)...});
 }
 
 #endif  // BOX_H

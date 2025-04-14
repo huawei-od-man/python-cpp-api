@@ -30,7 +30,7 @@ std::ostream& operator<<(std::ostream& os, const tuple& obj) {
     if (i > 0) {
       os << ", ";
     }
-    os << *obj[i];
+    os << obj[i];
   }
   os << ")";
   return os;

@@ -33,4 +33,6 @@ class NoneType;
 
 using float_type = long double;
 
+extern const ref None, True, False;
+
 #endif  // FORWARD_H

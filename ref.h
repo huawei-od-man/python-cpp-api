@@ -7,10 +7,10 @@
 
 class ref {
  public:
+  ref();
+
   template <typename T>
   ref(T&& value);
-
-  ref() = default;
 
   explicit ref(std::shared_ptr<object> ptr) noexcept : _ptr(std::move(ptr)) {}
 
@@ -26,7 +26,8 @@ class ref {
 
   constexpr object* operator->() const noexcept { return _ptr.get(); }
   constexpr object& operator*() const noexcept { return *_ptr; }
-  explicit operator bool() const noexcept { return _ptr != nullptr; }
+
+  explicit operator bool() const { return static_cast<bool>(_ptr->to_bool()); }
 
   template <typename T>
   T& as();
@@ -34,19 +35,24 @@ class ref {
   template <typename T>
   const T& as() const;
 
+  template <typename... Args>
+  ref operator()(Args&&... args);
+
  private:
   std::shared_ptr<object> _ptr;
 };
 
-inline
-std::ostream& operator<<(std::ostream& os, const ref& obj) {
-  if (obj) {
-    obj->format(os);
-  } else {
-    os << "None";
-  }
+inline std::ostream& operator<<(std::ostream& os, const ref& obj) {
+  obj->format(os);
   return os;
 }
+
+bool operator==(ref lhs, ref rhs);
+bool operator!=(ref lhs, ref rhs);
+bool operator<(ref lhs, ref rhs);
+bool operator<=(ref lhs, ref rhs);
+bool operator>(ref lhs, ref rhs);
+bool operator>=(ref lhs, ref rhs);
 
 ref operator+(ref lhs, ref rhs);
 
@@ -55,19 +61,6 @@ template <>
 struct hash<::ref> {
   size_t operator()(const ::ref& r) const noexcept { return r->hash(); }
 };
-template <>
-struct equal_to<::ref> {
-  bool operator()(const ::ref& lhs, const ::ref& rhs) const noexcept {
-    return *lhs == *rhs;
-  }
-};
-template <>
-struct less<::ref> {
-  bool operator()(const ::ref& lhs, const ::ref& rhs) const noexcept {
-    return *lhs < *rhs;
-  }
-};
-
 }  // namespace std
 
 #endif  // REF_H

@@ -19,41 +19,23 @@ class object {
   virtual str to_str() const;
 
   virtual bool to_bool() const { return true; }
-  explicit operator bool() const { return to_bool(); }
 
   virtual float_ to_float() const;
-  operator double() const;
 
   virtual size_t hash() const { return reinterpret_cast<uintptr_t>(this); }
   virtual size_t size() const;
   virtual const char* type_name() const { return "object"; }
 
   virtual void format(std::ostream& os) const {
-    os << type_name() << " object at " << this;
-  }
-  friend std::ostream& operator<<(std::ostream& os, const object& obj) {
-    obj.format(os);
-    return os;
+    os << "<" << type_name() << " object at " << this << ">";
   }
 
   virtual bool eq(const object& other) const { return this == &other; }
   virtual bool neq(const object& other) const { return !eq(other); }
-  friend bool operator==(const object& lhs, const object& rhs) {
-    return lhs.eq(rhs);
-  }
-  friend bool operator!=(const object& lhs, const object& rhs) {
-    return lhs.neq(rhs);
-  }
 
   virtual bool lt(const object& other) const { return this < &other; }
-  friend bool operator<(const object& lhs, const object& rhs) {
-    return lhs.lt(rhs);
-  }
 
   virtual ref call(tuple args);
-
-  template <typename... Args>
-  ref operator()(Args&&... args);
 
   virtual iterator get_iter() const;
   const iterator begin() const;
@@ -62,6 +44,10 @@ class object {
   virtual ref next();
 
   virtual ref add(ref other) const;
+  virtual ref sub(ref other) const;
+  virtual ref mul(ref other) const;
+  virtual ref div(ref other) const;
+
 };
 
 #endif  // OBJECT_H

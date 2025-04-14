@@ -16,7 +16,7 @@ std::ostream& operator<<(std::ostream& os, const list& lst) {
     if (i > 0) {
       os << ", ";
     }
-    os << *lst[i];
+    os << lst[i];
   }
   os << "]";
   return os;

@@ -15,6 +15,4 @@ struct NoneType {
   }
 };
 
-ref None();
-
 #endif  // NONE_H

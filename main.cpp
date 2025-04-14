@@ -1,6 +1,8 @@
 #include "python.h"
 
 int main() {
+  std::cout << tuple{None, True, False} << std::endl;
+
   list lst{3.14_f, true, 1_i, "hello"};
 
   std::cout << lst << std::endl;
@@ -11,10 +13,10 @@ int main() {
   std::cout << tuple{1, 2, 3} << std::endl;
 
   std::cout << lst[0] << std::endl;
-  
+
   std::cout << "This is {} and {} and {}"_s.format(1, 3.11, false) << std::endl;
 
-  std::cout << tuple{1, 2, 3} + tuple{None(), 5, 6} << std::endl;
+  std::cout << tuple{1, 2, 3} + tuple{None, 5, 6} << std::endl;
 
   auto d = dict{{"hello", 2}, {3, 4}, {5, 6}};
 

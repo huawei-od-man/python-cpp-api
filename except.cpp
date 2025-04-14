@@ -2,6 +2,8 @@
 
 Exception::Exception(str message) : _message(std::move(message)) {}
 
+Exception::Exception(const char* message) {}
+
 NotImplementedError::NotImplementedError(str message)
     : Exception(std::move(message)) {}
 
