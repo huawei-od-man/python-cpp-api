@@ -37,3 +37,7 @@ const iterator object::begin() const {
 }
 
 const iterator object::end() const { return {}; }
+
+ref object::add(ref other) const {
+  throw NotImplementedError("add method not implemented");
+}

@@ -22,9 +22,6 @@ class list {
     _items.push_back(item);
   }
 
-  template <typename T>
-  void append(T&& item);
-
   ref& operator[](size_t index);
 
   const ref& operator[](size_t index) const;
@@ -35,10 +32,10 @@ class list {
     return !_items.empty();
   }
 
-  class iter : public object {
+  class iter {
     public:
     // explicit
-     ref next() override;
+     ref next();
 
   };
 

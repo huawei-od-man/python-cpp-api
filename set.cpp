@@ -2,6 +2,12 @@
 
 #include <ostream>
 
+set::set(std::initializer_list<ref> items) {
+  for (const auto& item : items) {
+    _items.insert(item);
+  }
+}
+
 std::ostream& operator<<(std::ostream& os, const set& obj) {
   os << "{";
   size_t i = 0;

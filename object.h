@@ -61,6 +61,7 @@ class object {
 
   virtual ref next();
 
+  virtual ref add(ref other) const;
 };
 
 #endif  // OBJECT_H

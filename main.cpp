@@ -10,6 +10,8 @@ int main() {
 
   std::cout << tuple{1, 2, 3} << std::endl;
 
+  std::cout << lst[0] << std::endl;
+  
   std::cout << "This is {} and {} and {}"_s.format(1, 3.11, false) << std::endl;
 
   std::cout << tuple{1, 2, 3} + tuple{None(), 5, 6} << std::endl;

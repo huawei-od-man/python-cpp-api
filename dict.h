@@ -20,17 +20,9 @@ class dict {
   dict& operator=(dict&&) noexcept = default;
 
   ref& operator[](ref key);
-  
+
   const ref& operator[](ref key) const {
     return const_cast<const dict&>(*this)[key];
-  }
-
-  template <typename T>
-  ref& operator[](T&& key);
-
-  template <typename T>
-  const ref& operator[](T&& key) const {
-    return const_cast<const dict&>(*this)[std::forward<T>(key)];
   }
 
   size_t size() const noexcept { return _map.size(); }

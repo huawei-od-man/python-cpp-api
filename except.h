@@ -48,4 +48,10 @@ class ValueError : public Exception {
   explicit ValueError(const char* message);
 };
 
+class TypeError : public Exception {
+ public:
+  explicit TypeError(str message);
+  explicit TypeError(const char* message);
+};
+
 #endif

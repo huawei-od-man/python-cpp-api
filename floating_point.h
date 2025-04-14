@@ -11,6 +11,7 @@ class float_ {
   constexpr explicit float_(long double value) noexcept : _value(value) {}
   constexpr explicit float_(double value) noexcept : _value(value) {}
   constexpr explicit float_(float value) noexcept : _value(value) {}
+  float_(ref obj);
 
   constexpr float_() noexcept = default;
   ~float_() noexcept = default;

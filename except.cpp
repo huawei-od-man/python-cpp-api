@@ -23,3 +23,6 @@ KeyError::KeyError(const char* message) : KeyError(str(message)) {}
 
 ValueError::ValueError(str message) : Exception(std::move(message)) {}
 ValueError::ValueError(const char* message) : ValueError(str(message)) {}
+
+TypeError::TypeError(str message) : Exception(std::move(message)) {}
+TypeError::TypeError(const char* message) : TypeError(str(message)) {}

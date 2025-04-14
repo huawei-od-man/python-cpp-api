@@ -17,7 +17,7 @@ class ref {
   template <typename T>
   explicit ref(std::shared_ptr<box<T>> box_ptr) noexcept
       : _ptr(std::move(box_ptr)) {}
-      
+
   ref(ref& other) noexcept : _ptr(other._ptr) {}
   ref(const ref&) noexcept = default;
   ref(ref&&) noexcept = default;
@@ -27,6 +27,12 @@ class ref {
   constexpr object* operator->() const noexcept { return _ptr.get(); }
   constexpr object& operator*() const noexcept { return *_ptr; }
   explicit operator bool() const noexcept { return _ptr != nullptr; }
+
+  template <typename T>
+  T& as();
+
+  template <typename T>
+  const T& as() const;
 
  private:
   std::shared_ptr<object> _ptr;
@@ -41,6 +47,8 @@ std::ostream& operator<<(std::ostream& os, const ref& obj) {
   }
   return os;
 }
+
+ref operator+(ref lhs, ref rhs);
 
 namespace std {
 template <>

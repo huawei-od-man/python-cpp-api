@@ -11,6 +11,8 @@ template <typename T>
 class box;
 class ref;
 class weak_ref;
+template <typename T, typename... Args>
+ref make_box(Args&&... args);
 
 class object;
 class bool_;

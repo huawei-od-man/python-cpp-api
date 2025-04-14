@@ -14,6 +14,14 @@
 #include "str.h"
 #include "tuple.h"
 
+template <typename T, typename = void>
+struct has_add_method : std::false_type {};
+
+template <typename T>
+struct has_add_method<
+    T, std::void_t<decltype(std::declval<T>() + std::declval<T>())>>
+    : std::true_type {};
+
 // 检查 T 是否有一个返回类型为 size_t 的 size() 方法
 template <typename T, typename = void>
 struct has_size_method : std::false_type {};
@@ -79,6 +87,16 @@ class box : public object {
     }
   }
 
+  ref add(ref other) const override {
+    if constexpr (has_add_method<T>::value && std::is_constructible_v<T, ref>) {
+      const auto rhs = T(other);
+      const auto result = _value + rhs;
+      return make_box<decltype(result)>(result);
+    } else {
+      return object::add(other);
+    }
+  }
+
  private:
   T _value{};
 };
@@ -104,26 +122,28 @@ template <typename T>
 ref::ref(T&& value)
     : ref(make_box<T>(std::forward<T>(value))) {}
 
+template <typename T>
+T& ref::as() {
+  if constexpr (std::is_base_of_v<object, T>) {
+    if (auto ptr = std::dynamic_pointer_cast<T>(_ptr)) {
+      return *ptr;
+    }
+  } else {
+    if (auto ptr = std::dynamic_pointer_cast<box<T>>(_ptr)) {
+      return ptr->_value;
+    }
+  }
+  throw TypeError("Invalid type conversion from type");
+}
+
+template <typename T>
+const T& ref::as() const {
+  return const_cast<const T&>(const_cast<ref*>(this)->as<T>());
+}
+
 template <typename... Args>
 str str::format(Args&&... args) const {
   return format(tuple{std::forward<Args>(args)...});
-}
-
-template <typename T>
-void list::append(T&& item) {
-  _items.emplace_back(make_box<T>(std::forward<T>(item)));
-}
-
-template <typename T>
-ref& dict::operator[](T&& key) {
-  return (*this)[make_box<T>(std::forward<T>(key))];
-}
-
-template <typename... Args>
-set::set(Args&&... args) {
-  _items.reserve(sizeof...(args));
-  (void)std::initializer_list<int>{
-      (_items.insert(make_box<Args>(std::forward<Args>(args))), 0)...};
 }
 
 #endif  // BOX_H
