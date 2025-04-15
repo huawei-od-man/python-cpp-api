@@ -1,20 +1,18 @@
 #ifndef OBJECT_H
 #define OBJECT_H
-#include <iostream>
-
+#include <iosfwd>
+#include <utility>
 #include "forward.h"
-
 
 class object {
  public:
   object() = default;
   virtual ~object() = default;
 
-  // To prevent slicing objects.
-  object(const object&) = delete;
-  object(object&&) = delete;
-  object& operator=(const object&) = delete;
-  object& operator=(object&&) = delete;
+  object(const object&) = default;
+  object(object&&) noexcept = default;
+  object& operator=(const object&) = default;
+  object& operator=(object&&) noexcept  = default;
 
   virtual str to_str() const;
 
@@ -22,18 +20,15 @@ class object {
 
   virtual float_ to_float() const;
 
-  virtual size_t hash() const { return reinterpret_cast<uintptr_t>(this); }
-  virtual size_t size() const;
+  virtual std::size_t hash() const { return reinterpret_cast<uintptr_t>(this); }
+  virtual std::size_t size() const;
   virtual const char* type_name() const { return "object"; }
 
-  virtual void format(std::ostream& os) const {
-    os << "<" << type_name() << " object at " << this << ">";
-  }
+  virtual void format(std::ostream& os) const;
 
-  virtual bool eq(const object& other) const { return this == &other; }
-  virtual bool neq(const object& other) const { return !eq(other); }
-
-  virtual bool lt(const object& other) const { return this < &other; }
+  virtual bool eq(ref other) const;
+  virtual bool neq(ref other) const;
+  virtual bool lt(ref other) const;
 
   virtual ref call(tuple args);
 
@@ -48,6 +43,12 @@ class object {
   virtual ref mul(ref other) const;
   virtual ref div(ref other) const;
 
+  virtual ref type() const;
 };
+
+std::ostream& operator<<(std::ostream& os, const object& obj);
+
+bool operator==(const object& lhs, const object& rhs);
+bool operator!=(const object& lhs, const object& rhs);
 
 #endif  // OBJECT_H

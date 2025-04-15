@@ -1,6 +1,7 @@
 #ifndef STR_H
 #define STR_H
 #include <string>
+#include <utility>
 
 #include "forward.h"
 
@@ -35,12 +36,34 @@ class str {
     os << obj._string;
     return os;
   }
+
+  friend bool operator==(const str& lhs, const str& rhs) {
+    return lhs._string == rhs._string;
+  }
+
+  friend bool operator<(const str& lhs, const str& rhs) {
+    return lhs._string < rhs._string;
+  }
+
+  size_t hash() const {
+    return std::hash<std::string>{}(_string);
+  }
+
  private:
   std::string _string;
 };
 
 inline str operator""_s(const char* s, size_t) {
   return str(s);
+}
+
+namespace std {
+template <>
+struct hash<str> {
+  size_t operator()(const str& s) const noexcept {
+    return s.hash();
+  }
+};
 }
 
 #endif

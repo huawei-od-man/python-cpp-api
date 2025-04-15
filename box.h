@@ -13,6 +13,19 @@
 #include "set.h"
 #include "str.h"
 #include "tuple.h"
+#include "type.h"
+#include "none.h"
+
+// Primary template: Default case, assumes no specialization exists
+template <typename T, typename = void>
+struct has_specialized_hash : std::false_type {};
+
+// Specialization: Checks if std::hash<T> is well-formed
+template <typename T>
+struct has_specialized_hash<T,
+                            std::void_t<decltype(std::declval<std::hash<T>>()(
+                                std::declval<const T&>()))>> : std::true_type {
+};
 
 template <typename T, typename = void>
 struct has_add_method : std::false_type {};
@@ -20,6 +33,14 @@ struct has_add_method : std::false_type {};
 template <typename T>
 struct has_add_method<
     T, std::void_t<decltype(std::declval<T>() + std::declval<T>())>>
+    : std::true_type {};
+
+template <typename T, typename = void>
+struct has_eq_method : std::false_type {};
+
+template <typename T>
+struct has_eq_method<
+    T, std::void_t<decltype(std::declval<T>() == std::declval<T>())>>
     : std::true_type {};
 
 // 检查 T 是否有一个返回类型为 size_t 的 size() 方法
@@ -43,9 +64,17 @@ template <typename T>
 class box : public object {
   static_assert(!std::is_base_of<object, T>::value,
                 "T must not be derived from object");
+  static_assert(!std::is_reference_v<T>,
+                "T must not be a reference type");
+  static_assert(!std::is_pointer_v<T>,
+                "T must not be a pointer type");
+  static_assert(!std::is_void_v<T>,
+                "T must not be void");
+  static_assert(!std::is_const_v<T>, "T must not be const");
+  static_assert(!std::is_volatile_v<T>, "T must not be volatile");
 
  public:
-  box() noexcept(T()) = default;
+  box() noexcept(noexcept(T())) = default;
 
   template <typename... Args>
   explicit box(Args&&... args) : _value(std::forward<Args>(args)...) {}
@@ -89,11 +118,34 @@ class box : public object {
 
   ref add(ref other) const override {
     if constexpr (has_add_method<T>::value) {
-      const auto result = _value + other.as<T>();
-      return make_box<decltype(result)>(std::move(result));
+      return _value + other.as<T>();
     } else {
       return object::add(other);
     }
+  }
+
+  size_t hash() const override {
+    if constexpr (has_specialized_hash<T>::value) {
+      return std::hash<T>{}(_value);
+    } else {
+      return object::hash();
+    }
+  }
+
+  bool eq(ref other) const override {
+    if constexpr (has_eq_method<T>::value) {
+      try {
+        return _value == other.as<T>();
+      } catch (const TypeError&) {
+        return false;
+      }
+    } else {
+      return object::eq(other);
+    }
+  }
+
+  ref type() const override {
+    return type_instance<T>;
   }
 
  private:
@@ -110,7 +162,7 @@ ref make_box(Args&&... args) {
     return ref(std::make_shared<box<bool_>>(std::forward<Args>(args)...));
   } else if constexpr (std::is_integral<T>::value) {
     return ref(std::make_shared<box<int_>>(std::forward<Args>(args)...));
-  } else if constexpr (std::is_same_v<std::decay_t<T>, const char*>) {
+  } else if constexpr (std::is_same_v<std::decay_t<T>, char*>) {
     return ref(std::make_shared<box<str>>(std::forward<Args>(args)...));
   } else if constexpr (std::is_base_of<object, T>::value) {
     return ref(std::make_shared<T>(std::forward<Args>(args)...));
@@ -125,8 +177,8 @@ inline ref make_box<bool, bool>(bool&& value) {
 }
 
 template <typename T>
-ref::ref(T&& value)
-    : ref(make_box<T>(std::forward<T>(value))) {}
+ref::ref(T&& value) : ref(make_box<std::remove_cv_t<std::remove_reference_t<T>>>
+  (std::forward<T>(value))) {}
 
 template <typename T>
 T& ref::as() {
@@ -152,9 +204,38 @@ str str::format(Args&&... args) const {
   return format(tuple{std::forward<Args>(args)...});
 }
 
+template <typename T>
 template <typename... Args>
-ref ref::operator()(Args&&... args) {
-  return _ptr->call(tuple{std::forward<Args>(args)...});
+ref type<T>::operator()(Args&&... args) {
+  if constexpr (std::is_constructible_v<T, Args&&...>) {
+    return T(std::forward<Args>(args)...);
+  } else {
+    throw TypeError("Invalid arguments for type constructor");
+  }
 }
+
+ref object::type() const {
+  return type_instance<object>;
+}
+
+extern template class box<str>;
+extern template class box<bool_>;
+extern template class box<int_>;
+extern template class box<float_>;
+extern template class box<list>;
+extern template class box<dict>;
+extern template class box<set>;
+extern template class box<NoneType>;
+extern template class box<tuple>;
+
+extern template class box<type<str>>;
+extern template class box<type<bool_>>;
+extern template class box<type<int_>>;
+extern template class box<type<float_>>;
+extern template class box<type<list>>;
+extern template class box<type<dict>>;
+extern template class box<type<set>>;
+extern template class box<type<NoneType>>;
+extern template class box<type<tuple>>;
 
 #endif  // BOX_H

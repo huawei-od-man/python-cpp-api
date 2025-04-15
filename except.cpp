@@ -28,3 +28,12 @@ ValueError::ValueError(const char* message) : ValueError(str(message)) {}
 
 TypeError::TypeError(str message) : Exception(std::move(message)) {}
 TypeError::TypeError(const char* message) : TypeError(str(message)) {}
+
+OverflowError::OverflowError(str message) : Exception(std::move(message)) {}
+
+OverflowError::OverflowError(const char* message)
+    : OverflowError(str(message)) {}
+
+UnderflowError::UnderflowError(str message) : Exception(std::move(message)) {}
+UnderflowError::UnderflowError(const char* message)
+    : UnderflowError(str(message)) {}

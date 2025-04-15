@@ -54,4 +54,16 @@ class TypeError : public Exception {
   explicit TypeError(const char* message);
 };
 
+class OverflowError : public Exception {
+ public:
+  explicit OverflowError(str message);
+  explicit OverflowError(const char* message);
+};
+
+class UnderflowError : public Exception {
+ public:
+  explicit UnderflowError(str message);
+  explicit UnderflowError(const char* message);
+};
+
 #endif

@@ -13,3 +13,5 @@
 #include "tuple.h"
 #include "iter.h"
 #include "ref.h"
+#include "type.h"
+#include "funcs.h"

@@ -29,38 +29,31 @@ class ref {
 
   explicit operator bool() const { return static_cast<bool>(_ptr->to_bool()); }
 
+  object& value() { return *_ptr; }
+  const object& value() const { return *_ptr; }
+
   template <typename T>
   T& as();
 
   template <typename T>
   const T& as() const;
 
-  template <typename... Args>
-  ref operator()(Args&&... args);
-
  private:
   std::shared_ptr<object> _ptr;
 };
 
-inline std::ostream& operator<<(std::ostream& os, const ref& obj) {
-  obj->format(os);
-  return os;
-}
-
-bool operator==(ref lhs, ref rhs);
-bool operator!=(ref lhs, ref rhs);
-bool operator<(ref lhs, ref rhs);
-bool operator<=(ref lhs, ref rhs);
-bool operator>(ref lhs, ref rhs);
-bool operator>=(ref lhs, ref rhs);
-
-ref operator+(ref lhs, ref rhs);
-
 namespace std {
 template <>
 struct hash<::ref> {
-  size_t operator()(const ::ref& r) const noexcept { return r->hash(); }
+  size_t operator()(const ::ref& r) const { return r->hash(); }
 };
+template <>
+struct equal_to<::ref> {
+  bool operator()(const ::ref& lhs, const ::ref& rhs) const {
+    return lhs.value() == rhs.value();
+  }
+};
+
 }  // namespace std
 
 #endif  // REF_H

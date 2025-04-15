@@ -2,6 +2,7 @@
 #define BOOL_H
 
 #include <ostream>
+#include <utility>
 
 class ref;
 
@@ -40,5 +41,14 @@ class bool_ {
  private:
   bool _value{false};
 };
+
+namespace std {
+template <>
+struct hash<bool_> {
+  size_t operator()(const bool_& b) const noexcept {
+    return std::hash<bool>{}(b.value());
+  }
+};
+}  // namespace std
 
 #endif

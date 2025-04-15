@@ -15,6 +15,7 @@ class float_ {
 
   constexpr float_() noexcept = default;
   ~float_() noexcept = default;
+
   constexpr float_(const float_&) noexcept = default;
   constexpr float_(float_&&) noexcept = default;
   constexpr float_& operator=(const float_&) noexcept = default;
@@ -30,9 +31,11 @@ class float_ {
   }
 
   constexpr long double value() const noexcept { return _value; }
+  float_ operator-() const;
 
   static constexpr float_ minimum() noexcept { return float_(LDBL_MIN); }
   static constexpr float_ maximum() noexcept { return float_(LDBL_MAX); }
+  static constexpr float_ epsilon() noexcept { return float_(LDBL_EPSILON); }
 
   friend std::ostream& operator<<(std::ostream& os, const float_& f) {
     os << f.value();
@@ -46,5 +49,19 @@ class float_ {
 inline float_ operator""_f(long double value) { return float_(value); }
 
 float_ operator/(const float_& lhs, const float_& rhs);
+float_ operator+(const float_& lhs, const float_& rhs);
+float_ operator-(const float_& lhs, const float_& rhs);
+float_ operator*(const float_& lhs, const float_& rhs);
 
+bool operator==(const float_& lhs, const float_& rhs);
+bool operator<(const float_& lhs, const float_& rhs);
+
+namespace std {
+template <>
+struct hash<float_> {
+  size_t operator()(const float_& f) const noexcept {
+    return std::hash<long double>{}(f.value());
+  }
+};
+}  // namespace std
 #endif  // FLOATING_POINT_H

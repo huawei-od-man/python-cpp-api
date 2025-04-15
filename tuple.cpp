@@ -30,7 +30,7 @@ std::ostream& operator<<(std::ostream& os, const tuple& obj) {
     if (i > 0) {
       os << ", ";
     }
-    os << obj[i];
+    os << obj[i].value();
   }
   os << ")";
   return os;
@@ -46,4 +46,16 @@ tuple operator+(const tuple& lhs, const tuple& rhs) {
     result._items.push_back(rhs[i]);
   }
   return result;
+}
+
+bool operator==(const tuple& lhs, const tuple& rhs) noexcept {
+  if (lhs.size() != rhs.size()) {
+    return false;
+  }
+  for (size_t i = 0; i < lhs.size(); ++i) {
+    if (lhs[i].value() != rhs[i].value()) {
+      return false;
+    }
+  }
+  return true;
 }
