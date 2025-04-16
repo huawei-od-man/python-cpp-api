@@ -1,7 +1,6 @@
 #ifndef TYPE_H
 #define TYPE_H
 
-#include <functional>
 #include <iostream>
 
 #include "forward.h"
@@ -12,6 +11,8 @@ template <typename T>
 class type {
  public:
   constexpr type() noexcept = default;
+
+  static ref instance();
 
   template <typename... Args>
   ref operator()(Args&&... args);
@@ -32,7 +33,7 @@ class type {
     size_t start = s.find("T = ");
     if (start != std::string::npos) {
       start += 4;  // Length of "T = "
-      size_t end = s.find(',', start);
+      size_t end = s.find(']', start);
       return s.substr(start, end - start);
     }
     return "unknown";
@@ -62,5 +63,10 @@ const ref type_instance = make_box<type<T>>();
 
 template <typename T>
 const ref type_instance<type<T>> = make_box<type<void>>();
+
+template <typename T>
+inline ref type<T>::instance() {
+  return type_instance<T>;
+}
 
 #endif

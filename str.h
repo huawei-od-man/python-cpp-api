@@ -2,6 +2,7 @@
 #define STR_H
 #include <string>
 #include <utility>
+#include <iostream>
 
 #include "forward.h"
 

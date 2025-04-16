@@ -2,6 +2,7 @@
 #define REF_H
 
 #include <memory>
+#include <iosfwd>
 
 #include "object.h"
 
@@ -9,8 +10,7 @@ class ref {
  public:
   ref();
 
-  template <typename T>
-  ref(T&& value);
+  explicit ref(Any&& value) noexcept;
 
   explicit ref(std::shared_ptr<object> ptr) noexcept : _ptr(std::move(ptr)) {}
 
@@ -18,40 +18,45 @@ class ref {
   explicit ref(std::shared_ptr<box<T>> box_ptr) noexcept
       : _ptr(std::move(box_ptr)) {}
 
-  ref(ref& other) noexcept : _ptr(other._ptr) {}
   ref(const ref&) noexcept = default;
   ref(ref&&) noexcept = default;
   ref& operator=(const ref&) noexcept = default;
   ref& operator=(ref&&) noexcept = default;
 
   constexpr object* operator->() const noexcept { return _ptr.get(); }
-  constexpr object& operator*() const noexcept { return *_ptr; }
 
   explicit operator bool() const { return static_cast<bool>(_ptr->to_bool()); }
 
-  object& value() { return *_ptr; }
-  const object& value() const { return *_ptr; }
+  std::shared_ptr<object> value() const noexcept { return _ptr; }
+  const object* get() const noexcept { return _ptr.get(); }
 
-  template <typename T>
-  T& as();
+  bool operator==(const ref& other) const;
+  bool operator!=(const ref& other) const;
 
-  template <typename T>
-  const T& as() const;
+  bool operator<(const ref& other) const;
+  bool operator>(const ref& other) const;
+
+  friend std::ostream& operator<<(std::ostream& os, const ref& r);
 
  private:
   std::shared_ptr<object> _ptr;
+};
+
+struct Any {
+  template <typename T>
+  Any(T&& value) : r(to_ref(std::forward<T>(value))) {}
+
+  Any(ref r) : r(r) {}
+
+  operator ref() const { return r; }
+
+  ref r;
 };
 
 namespace std {
 template <>
 struct hash<::ref> {
   size_t operator()(const ::ref& r) const { return r->hash(); }
-};
-template <>
-struct equal_to<::ref> {
-  bool operator()(const ::ref& lhs, const ::ref& rhs) const {
-    return lhs.value() == rhs.value();
-  }
 };
 
 }  // namespace std

@@ -1,8 +1,8 @@
 #ifndef LIST_H
 #define LIST_H
 
-#include <vector>
 #include <iosfwd>
+#include <vector>
 
 #include "ref.h"
 
@@ -16,11 +16,11 @@ class list {
   list& operator=(const list&) = default;
   list& operator=(list&&) noexcept = default;
 
-   list(std::initializer_list<ref> items);
+  list(std::initializer_list<Any> items);
 
-  void append(ref item) {
-    _items.push_back(item);
-  }
+  void append(Any item);
+
+  void sort(bool reverse = false);
 
   ref& operator[](size_t index);
 
@@ -28,15 +28,12 @@ class list {
 
   size_t size() const noexcept { return _items.size(); }
 
-  explicit operator bool() const noexcept {
-    return !_items.empty();
-  }
+  explicit operator bool() const noexcept { return !_items.empty(); }
 
   class iter {
-    public:
+   public:
     // explicit
-     ref next();
-
+    ref next();
   };
 
  private:

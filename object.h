@@ -48,7 +48,4 @@ class object {
 
 std::ostream& operator<<(std::ostream& os, const object& obj);
 
-bool operator==(const object& lhs, const object& rhs);
-bool operator!=(const object& lhs, const object& rhs);
-
 #endif  // OBJECT_H

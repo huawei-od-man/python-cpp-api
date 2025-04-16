@@ -9,8 +9,8 @@ class set {
  public:
   set() noexcept = default;
   ~set() noexcept = default;
-  set(std::initializer_list<ref> items);
-  
+  set(std::initializer_list<Any> items);
+
   set(const set&) = default;
   set(set&&) noexcept = default;
   set& operator=(const set&) = default;

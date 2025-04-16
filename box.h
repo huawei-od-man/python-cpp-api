@@ -72,6 +72,7 @@ class box : public object {
                 "T must not be void");
   static_assert(!std::is_const_v<T>, "T must not be const");
   static_assert(!std::is_volatile_v<T>, "T must not be volatile");
+  static_assert(!std::is_same_v<T, ref>, "T must not be ref");
 
  public:
   box() noexcept(noexcept(T())) = default;
@@ -118,7 +119,7 @@ class box : public object {
 
   ref add(ref other) const override {
     if constexpr (has_add_method<T>::value) {
-      return _value + other.as<T>();
+      return to_ref(_value + from_ref<T>(other));
     } else {
       return object::add(other);
     }
@@ -135,7 +136,7 @@ class box : public object {
   bool eq(ref other) const override {
     if constexpr (has_eq_method<T>::value) {
       try {
-        return _value == other.as<T>();
+        return _value == from_ref<T>(other);
       } catch (const TypeError&) {
         return false;
       }
@@ -145,8 +146,11 @@ class box : public object {
   }
 
   ref type() const override {
-    return type_instance<T>;
+    return ::type<T>::instance();
   }
+
+  T& value() { return _value; }
+  const T& value() const { return _value; }
 
  private:
   friend class ref;
@@ -177,26 +181,28 @@ inline ref make_box<bool, bool>(bool&& value) {
 }
 
 template <typename T>
-ref::ref(T&& value) : ref(make_box<std::remove_cv_t<std::remove_reference_t<T>>>
-  (std::forward<T>(value))) {}
+ref to_ref(T&& value) {
+  using U = std::remove_cv_t<std::remove_reference_t<T>>;
+  return make_box<U>(std::forward<T>(value));
+}
 
 template <typename T>
-T& ref::as() {
+T& from_ref(ref& r) {
   if constexpr (std::is_base_of_v<object, T>) {
-    if (auto ptr = std::dynamic_pointer_cast<T>(_ptr)) {
+    if (auto ptr = std::dynamic_pointer_cast<T>(r.value())) {
       return *ptr;
     }
   } else {
-    if (auto ptr = std::dynamic_pointer_cast<box<T>>(_ptr)) {
-      return ptr->_value;
+    if (auto ptr = std::dynamic_pointer_cast<box<T>>(r.value())) {
+      return ptr->value();
     }
   }
   throw TypeError("Invalid type conversion from type");
 }
 
 template <typename T>
-const T& ref::as() const {
-  return const_cast<const T&>(const_cast<ref*>(this)->as<T>());
+const T& from_ref(const ref& r) {
+  return from_ref<T>(const_cast<ref&>(r));
 }
 
 template <typename... Args>
@@ -212,10 +218,6 @@ ref type<T>::operator()(Args&&... args) {
   } else {
     throw TypeError("Invalid arguments for type constructor");
   }
-}
-
-ref object::type() const {
-  return type_instance<object>;
 }
 
 extern template class box<str>;

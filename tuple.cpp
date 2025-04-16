@@ -3,7 +3,7 @@
 #include "list.h"
 #include "except.h"
 
-tuple::tuple(std::initializer_list<ref> items) {
+tuple::tuple(std::initializer_list<Any> items) {
   _items.reserve(items.size());
   for (const auto& item : items) {
     _items.push_back(item);
@@ -30,7 +30,7 @@ std::ostream& operator<<(std::ostream& os, const tuple& obj) {
     if (i > 0) {
       os << ", ";
     }
-    os << obj[i].value();
+    os << obj[i];
   }
   os << ")";
   return os;
@@ -53,7 +53,7 @@ bool operator==(const tuple& lhs, const tuple& rhs) noexcept {
     return false;
   }
   for (size_t i = 0; i < lhs.size(); ++i) {
-    if (lhs[i].value() != rhs[i].value()) {
+    if (lhs[i] != rhs[i]) {
       return false;
     }
   }

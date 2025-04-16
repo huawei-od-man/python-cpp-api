@@ -17,7 +17,7 @@ str str::format(tuple args) const {
       if (index >= args.size()) {
         throw IndexError("Index out of range");
       }
-      oss << args[index++].value();
+      oss << args[index++];
       ++i;  // Skip the '}'
     } else {
       oss << _string[i];
