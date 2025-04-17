@@ -38,6 +38,11 @@ class ref {
 
   friend std::ostream& operator<<(std::ostream& os, const ref& r);
 
+  template <typename... Args>
+  ref call(Args&&... args) {
+    return _ptr->call(tuple(std::forward<Args>(args)...));
+  }
+  
  private:
   std::shared_ptr<object> _ptr;
 };
@@ -45,6 +50,11 @@ class ref {
 struct Any {
   template <typename T>
   Any(T&& value) : r(to_ref(std::forward<T>(value))) {}
+
+  Any(const Any&) noexcept = default;
+  Any(Any&&) noexcept = default;
+  Any(Any&) noexcept;
+  Any(const Any&&) noexcept;
 
   Any(ref r) : r(r) {}
 

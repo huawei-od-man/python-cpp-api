@@ -30,7 +30,7 @@ class object {
   virtual bool neq(ref other) const;
   virtual bool lt(ref other) const;
 
-  virtual ref call(tuple args);
+  virtual ref call(const tuple& args);
 
   virtual iterator get_iter() const;
   const iterator begin() const;

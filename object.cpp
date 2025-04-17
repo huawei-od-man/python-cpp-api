@@ -33,7 +33,7 @@ size_t object::size() const {
   throw NotImplementedError("size method not implemented");
 }
 
-ref object::call(tuple args) {
+ref object::call(const tuple& args) {
   throw NotImplementedError("call method not implemented");
 }
 
@@ -70,6 +70,11 @@ std::ostream& operator<<(std::ostream& os, const object& obj) {
   return os;
 }
 
+template<> ref type<object>(){
+  static const auto object_type = to_ref(typeinfo{"object", tuple{}, dict{}});
+  return object_type;
+}
+
 ref object::type() const {
-  return ::type<object>::instance();
+  return ::type<object>();
 }

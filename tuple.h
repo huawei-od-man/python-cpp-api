@@ -30,18 +30,21 @@ class tuple {
   const ref& operator[](size_t index) {
     return const_cast<const tuple&>(*this)[index];
   }
+
+  tuple slice(size_t start, size_t end = -1) const;
+
   friend tuple operator+(const tuple& lhs, const tuple& rhs);
+
+  friend bool operator<(const tuple& lhs, const tuple& rhs) noexcept;
+  friend bool operator>(const tuple& lhs, const tuple& rhs) noexcept;
+  friend bool operator<=(const tuple& lhs, const tuple& rhs) noexcept;
+  friend bool operator>=(const tuple& lhs, const tuple& rhs) noexcept;
+  friend bool operator==(const tuple& lhs, const tuple& rhs) noexcept;
+  friend bool operator!=(const tuple& lhs, const tuple& rhs) noexcept;
 
  private:
   std::vector<ref> _items;
 };
-
-bool operator<(const tuple& lhs, const tuple& rhs) noexcept;
-bool operator>(const tuple& lhs, const tuple& rhs) noexcept;
-bool operator<=(const tuple& lhs, const tuple& rhs) noexcept;
-bool operator>=(const tuple& lhs, const tuple& rhs) noexcept;
-bool operator==(const tuple& lhs, const tuple& rhs) noexcept;
-bool operator!=(const tuple& lhs, const tuple& rhs) noexcept;
 
 std::ostream& operator<<(std::ostream& os, const tuple& obj);
 

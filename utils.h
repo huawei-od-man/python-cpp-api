@@ -4,9 +4,10 @@
 #include <iostream>
 
 #include "forward.h"
-#include "ref.h"
 
 void print(std::initializer_list<Any> args, std::ostream& os = std::cout);
 void print(Any arg, std::ostream& os = std::cout);
+
+str repr(ref obj);
 
 #endif  // FUNCS_H

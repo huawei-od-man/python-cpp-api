@@ -19,9 +19,9 @@ class dict {
   dict& operator=(const dict&) = default;
   dict& operator=(dict&&) noexcept = default;
 
-  ref& operator[](ref key);
+  ref& operator[](Any key);
 
-  const ref& operator[](ref key) const {
+  const ref& operator[](Any key) const {
     return const_cast<const dict&>(*this)[key];
   }
 

@@ -42,4 +42,6 @@ class list {
 
 std::ostream& operator<<(std::ostream& os, const list& lst);
 
+template<> ref type<list>();
+
 #endif

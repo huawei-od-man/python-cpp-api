@@ -26,12 +26,11 @@ class str {
   explicit operator bool() const { return !_string.empty(); }
   size_t size() const { return _string.size(); }
 
-  str format(tuple args) const;
-
-  template <typename... Args>
-  str format(Args&&... args) const;
+  str format(const tuple& args) const;
 
   const char* c_str() const { return _string.c_str(); }
+
+  const std::string& value() const { return _string; }
 
   friend std::ostream& operator<<(std::ostream& os, const str& obj) {
     os << obj._string;
@@ -56,6 +55,10 @@ class str {
 
 inline str operator""_s(const char* s, size_t) {
   return str(s);
+}
+
+inline str operator+(const str& lhs, const str& rhs) {
+  return str(lhs.value() + rhs.value());
 }
 
 namespace std {

@@ -6,15 +6,69 @@
 #include "dict.h"
 #include "except.h"
 #include "floating_point.h"
+#include "function.h"
 #include "int.h"
 #include "list.h"
+#include "none.h"
 #include "object.h"
 #include "ref.h"
 #include "set.h"
 #include "str.h"
 #include "tuple.h"
 #include "type.h"
-#include "none.h"
+
+// 通用模板：提取函数签名
+template <typename T>
+struct function_signature;
+
+// 针对普通函数指针
+template <typename R, typename... Args>
+struct function_signature<R (*)(Args...)> {
+  using type = R (*)(Args...);
+};
+
+// 针对 std::function
+template <typename R, typename... Args>
+struct function_signature<std::function<R(Args...)>> {
+  using type = R (*)(Args...);
+};
+
+// 针对 lambda 或其他可调用对象
+template <typename T>
+struct function_signature : function_signature<decltype(&T::operator())> {};
+
+// 针对成员函数指针
+template <typename C, typename R, typename... Args>
+struct function_signature<R (C::*)(Args...) const> {
+  using type = R (*)(const C&, Args...);
+};
+
+template <typename C, typename R, typename... Args>
+struct function_signature<R (C::*)(Args...)> {
+  using type = R (*)(C&, Args...);
+};
+
+template <typename T, typename = void>
+struct has_call_method : std::false_type {};
+
+template <typename T>
+struct has_call_method<T, std::void_t<decltype(&T::operator())>>
+    : std::true_type {};
+
+template <typename T, typename = void>
+struct has_type_method : std::false_type {};
+
+template <typename T>
+struct has_type_method<T, std::void_t<decltype(T::type())>>
+    : std::is_same<decltype(T::type()), ref> {};
+
+template <typename T, typename = void>
+struct has_lt_method : std::false_type {};
+
+template <typename T>
+struct has_lt_method<
+    T, std::void_t<decltype(std::declval<T>() < std::declval<T>())>>
+    : std::true_type {};
 
 // Primary template: Default case, assumes no specialization exists
 template <typename T, typename = void>
@@ -64,15 +118,13 @@ template <typename T>
 class box : public object {
   static_assert(!std::is_base_of<object, T>::value,
                 "T must not be derived from object");
-  static_assert(!std::is_reference_v<T>,
-                "T must not be a reference type");
-  static_assert(!std::is_pointer_v<T>,
-                "T must not be a pointer type");
-  static_assert(!std::is_void_v<T>,
-                "T must not be void");
+  static_assert(!std::is_reference_v<T>, "T must not be a reference type");
+  static_assert(!std::is_pointer_v<T>, "T must not be a pointer type");
+  static_assert(!std::is_void_v<T>, "T must not be void");
   static_assert(!std::is_const_v<T>, "T must not be const");
   static_assert(!std::is_volatile_v<T>, "T must not be volatile");
   static_assert(!std::is_same_v<T, ref>, "T must not be ref");
+  static_assert(!std::is_same_v<T, Any>, "T must not be Any");
 
  public:
   box() noexcept(noexcept(T())) = default;
@@ -138,16 +190,34 @@ class box : public object {
       try {
         return _value == from_ref<T>(other);
       } catch (const TypeError&) {
-        return false;
+        return object::eq(other);
       }
     } else {
       return object::eq(other);
     }
   }
 
-  ref type() const override {
-    return ::type<T>::instance();
+  bool lt(ref other) const override {
+    if constexpr (has_lt_method<T>::value) {
+      try {
+        return _value < from_ref<T>(other);
+      } catch (const TypeError&) {
+        return object::lt(other);
+      }
+    } else {
+      return object::lt(other);
+    }
   }
+
+  ref call(const tuple& args) override {
+    if constexpr (std::is_invocable<T, const tuple&>::value) {
+      return to_ref(std::invoke(_value, args));
+    } else {
+      return object::call(args);
+    }
+  }
+
+  ref type() const override { return ::type<T>(); }
 
   T& value() { return _value; }
   const T& value() const { return _value; }
@@ -168,6 +238,11 @@ ref make_box(Args&&... args) {
     return ref(std::make_shared<box<int_>>(std::forward<Args>(args)...));
   } else if constexpr (std::is_same_v<std::decay_t<T>, char*>) {
     return ref(std::make_shared<box<str>>(std::forward<Args>(args)...));
+  } else if constexpr (has_call_method<T>::value) {
+    using function_type =
+        std::remove_pointer_t<typename function_signature<T>::type>;
+    return ref(std::make_shared<box<function<function_type>>>(
+        std::forward<Args>(args)...));
   } else if constexpr (std::is_base_of<object, T>::value) {
     return ref(std::make_shared<T>(std::forward<Args>(args)...));
   } else {
@@ -187,8 +262,20 @@ ref to_ref(T&& value) {
 }
 
 template <typename T>
-T& from_ref(ref& r) {
-  if constexpr (std::is_base_of_v<object, T>) {
+std::conditional_t<std::is_scalar_v<T>, T, T&> from_ref(ref& r) {
+  if constexpr (std::is_same_v<T, bool>) {
+    if (auto ptr = std::dynamic_pointer_cast<box<bool_>>(r.value())) {
+      return static_cast<T>(ptr->value());
+    }
+  } else if constexpr (std::is_integral_v<T>) {
+    if (auto ptr = std::dynamic_pointer_cast<box<int_>>(r.value())) {
+      return static_cast<T>(ptr->value());
+    }
+  } else if constexpr (std::is_floating_point_v<T>) {
+    if (auto ptr = std::dynamic_pointer_cast<box<float_>>(r.value())) {
+      return static_cast<T>(ptr->value());
+    }
+  } else if constexpr (std::is_base_of_v<object, T>) {
     if (auto ptr = std::dynamic_pointer_cast<T>(r.value())) {
       return *ptr;
     }
@@ -197,27 +284,22 @@ T& from_ref(ref& r) {
       return ptr->value();
     }
   }
-  throw TypeError("Invalid type conversion from type");
+  throw TypeError("Invalid type conversion");
 }
 
 template <typename T>
-const T& from_ref(const ref& r) {
+std::conditional_t<std::is_scalar_v<T>, T, const T&> from_ref(const ref& r) {
   return from_ref<T>(const_cast<ref&>(r));
 }
 
-template <typename... Args>
-str str::format(Args&&... args) const {
-  return format(tuple{std::forward<Args>(args)...});
-}
-
 template <typename T>
-template <typename... Args>
-ref type<T>::operator()(Args&&... args) {
-  if constexpr (std::is_constructible_v<T, Args&&...>) {
-    return T(std::forward<Args>(args)...);
-  } else {
-    throw TypeError("Invalid arguments for type constructor");
-  }
+ref type() {
+  static const auto instance = to_ref(typeinfo{
+      .name = get_type_name<T>(),
+      .bases = tuple{type<object>()},
+      .attrs = dict{},
+  });
+  return instance;
 }
 
 extern template class box<str>;
@@ -229,15 +311,5 @@ extern template class box<dict>;
 extern template class box<set>;
 extern template class box<NoneType>;
 extern template class box<tuple>;
-
-extern template class box<type<str>>;
-extern template class box<type<bool_>>;
-extern template class box<type<int_>>;
-extern template class box<type<float_>>;
-extern template class box<type<list>>;
-extern template class box<type<dict>>;
-extern template class box<type<set>>;
-extern template class box<type<NoneType>>;
-extern template class box<type<tuple>>;
 
 #endif  // BOX_H

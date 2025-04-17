@@ -6,8 +6,8 @@
 #include "ref.h"
 #include "tuple.h"
 
-ref& dict::operator[](ref key) {
-    auto it = _map.find(key);
+ref& dict::operator[](Any key) {
+    const auto it = _map.find(key);
     if (it != _map.end()) {
         return it->second;
     }

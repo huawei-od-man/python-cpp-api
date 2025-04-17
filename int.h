@@ -15,6 +15,9 @@ class int_ {
 
   constexpr explicit operator bool() const noexcept { return _value != 0; }
   constexpr explicit operator int64_t() const noexcept { return _value; }
+  constexpr explicit operator int() const noexcept {
+    return static_cast<int>(_value);
+  }
   constexpr explicit operator long double() const noexcept {
     return static_cast<long double>(_value);
   }
