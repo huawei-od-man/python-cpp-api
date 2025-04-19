@@ -2,6 +2,14 @@
 
 #include "list.h"
 #include "except.h"
+#include "dict.h"
+#include "str.h"
+#include "set.h"
+
+ref type(const tuple &) {
+  static const auto tuple_type = ::type("tuple", tuple{}, dict{});
+  return tuple_type;
+}
 
 tuple::tuple(std::initializer_list<Any> items) {
   _items.reserve(items.size());

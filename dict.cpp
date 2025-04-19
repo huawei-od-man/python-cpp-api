@@ -5,6 +5,7 @@
 #include "except.h"
 #include "ref.h"
 #include "tuple.h"
+#include "str.h"
 
 ref& dict::operator[](Any key) {
     const auto it = _map.find(key);
@@ -32,4 +33,9 @@ dict::dict(std::initializer_list<tuple> items) {
     }
     _map[item[0]] = item[1];
   }
+}
+
+ref type(const dict&) {
+  static const auto dict_type = ::type("dict", tuple{}, dict{});
+  return dict_type;
 }

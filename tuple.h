@@ -27,7 +27,7 @@ class tuple {
 
   const ref& operator[](size_t index) const;
 
-  const ref& operator[](size_t index) {
+const ref& operator[](size_t index) {
     return const_cast<const tuple&>(*this)[index];
   }
 

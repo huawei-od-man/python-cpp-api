@@ -3,7 +3,6 @@
 #include <sstream>
 
 #include "except.h"
-#include "function.h"
 #include "object.h"
 #include "ref.h"
 #include "tuple.h"
@@ -28,11 +27,7 @@ str str::format(const tuple& args) const {
   return str(oss.str());
 }
 
-template <>
-ref type<str>() {
-  static const auto str_type = to_ref(typeinfo{
-      .name = "str",
-  });
-
+ref type(const str&) {
+  static const auto str_type = ::type("str", {}, {});
   return str_type;
 }

@@ -3,9 +3,8 @@
 #include <iostream>
 
 #include "except.h"
-#include "type.h"
-#include "function.h"
-#include "box.h"
+#include "tuple.h"
+#include "dict.h"
 
 list::list(std::initializer_list<Any> items) {
   _items.reserve(items.size());
@@ -49,16 +48,7 @@ void list::sort(bool reverse) {
             });
 }
 
-template<>
-ref type<list>() {
-  static const auto list_type = to_ref(typeinfo{
-      .name = "list",
-      .bases = tuple{type<object>()},
-      .attrs = dict{
-        {"append", &list::append},
-        {"sort", &list::sort},
-      },
-  });
-
+ref type(const list&) {
+  static const auto list_type = ::type("list", tuple{}, dict{});
   return list_type;
 }

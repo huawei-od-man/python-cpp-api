@@ -1,24 +1,19 @@
 #include "type.h"
 
-#include "box.h"
-#include "function.h"
+#include "object.h"
+
+#include "box.tcc"
+
+typeinfo::typeinfo(const str& name, const tuple& bases, const dict& attrs
+) : _name(name), _bases(bases), _attrs(attrs) {}
 
 ref type(const str& name, const tuple& bases, const dict& attrs) {
-  return to_ref(typeinfo{
-      .name = name,
-      .bases = bases,
-      .attrs = attrs,
-  });
+  return make_box<typeinfo>(name, bases, attrs);
 }
 
-ref type(ref obj) { return obj->type(); }
+ref type(const ref& obj) { return obj->type(); }
 
-template <>
-ref type<typeinfo>() {
-  static const auto type_type = to_ref(typeinfo{
-      .name = "type",
-      .bases = tuple{type<object>()},
-  });
-
+ref type(const typeinfo&) {
+  static const auto type_type = type("type", {}, {});
   return type_type;
 }

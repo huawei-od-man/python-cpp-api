@@ -1,6 +1,7 @@
 #ifndef FORWARD_H
 #define FORWARD_H
 #include <type_traits>
+#include <iosfwd>
 
 struct Any;
 class ref;
@@ -42,7 +43,25 @@ template <typename F>
 class function;
 
 template <typename T>
-ref type();
+ref type(const T&);
+
+ref type(const ref&);
+
+ref type(const str& name, const tuple& bases, const dict& attrs);
+
+ref type(const typeinfo&);
+ref type(const str&);
+ref type(const bool_&);
+ref type(const float_&);
+ref type(const int_&);
+ref type(const object&);
+ref type(const dict&);
+ref type(const list&);
+ref type(const set&);
+ref type(const NoneType&);
+ref type(const tuple&);
+
+str repr(const object& value);
 
 extern const ref None, True, False;
 
@@ -51,5 +70,6 @@ class NotImplementedError;
 class TypeError;
 class ValueError;
 class KeyError;
+
 
 #endif  // FORWARD_H

@@ -2,6 +2,7 @@
 #define OBJECT_H
 #include <iosfwd>
 #include <utility>
+
 #include "forward.h"
 
 class object {
@@ -22,8 +23,6 @@ class object {
 
   virtual std::size_t hash() const { return reinterpret_cast<uintptr_t>(this); }
   virtual std::size_t size() const;
-  virtual const char* type_name() const { return "object"; }
-
   virtual void format(std::ostream& os) const;
 
   virtual bool eq(ref other) const;
@@ -42,7 +41,6 @@ class object {
   virtual ref sub(ref other) const;
   virtual ref mul(ref other) const;
   virtual ref div(ref other) const;
-
   virtual ref type() const;
 };
 

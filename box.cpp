@@ -1,5 +1,7 @@
 #include "box.h"
 
+#include "box.tcc"
+
 template class box<str>;
 template class box<bool_>;
 template class box<int_>;

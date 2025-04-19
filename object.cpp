@@ -9,7 +9,7 @@
 #include "str.h"
 #include "tuple.h"
 #include "type.h"
-#include "box.h"  // make_box()
+#include "box.tcc"
 
 str object::to_str() const {
   std::ostringstream oss;
@@ -62,7 +62,8 @@ ref object::div(ref other) const {
 }
 
 void object::format(std::ostream& os) const {
-  os << "<" << type() << " object at " << this << ">";
+  const auto& tp = from_ref<::typeinfo>(this->type());
+  os << "<" << tp.name() << " object at " << this << ">";
 }
 
 std::ostream& operator<<(std::ostream& os, const object& obj) {
@@ -70,11 +71,11 @@ std::ostream& operator<<(std::ostream& os, const object& obj) {
   return os;
 }
 
-template<> ref type<object>(){
+ref type(const object&){
   static const auto object_type = to_ref(typeinfo{"object", tuple{}, dict{}});
   return object_type;
 }
 
 ref object::type() const {
-  return ::type<object>();
+  return ::type(*this);
 }

@@ -30,18 +30,10 @@ class list {
 
   explicit operator bool() const noexcept { return !_items.empty(); }
 
-  class iter {
-   public:
-    // explicit
-    ref next();
-  };
-
  private:
   std::vector<ref> _items;
 };
 
 std::ostream& operator<<(std::ostream& os, const list& lst);
-
-template<> ref type<list>();
 
 #endif

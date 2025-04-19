@@ -2,15 +2,17 @@
 
 #include "except.h"
 #include "ref.h"
+#include "str.h"
+#include "tuple.h"
+#include "dict.h"
 
-float_ operator/(const float_& lhs, const float_& rhs) {
-  if (rhs.value() == 0.0) {
-    throw ZeroDivisionError("division by zero");
-  }
-  return float_(lhs.value() / rhs.value());
-}
 
 float_::float_(ref obj) : float_(obj->to_float()) {}
+
+ref type(const float_ &) {
+  static const auto float_type = ::type("float", tuple{}, dict{});
+  return float_type;
+}
 
 bool operator==(const float_& lhs, const float_& rhs) {
   return std::fabs(lhs.value() - rhs.value()) < float_::epsilon().value();
@@ -39,6 +41,13 @@ float_ operator*(const float_& lhs, const float_& rhs) {
     throw OverflowError("float multiplication overflow");
   }
   return float_(lhs.value() * rhs.value());
+}
+
+float_ operator/(const float_& lhs, const float_& rhs) {
+  if (rhs.value() == 0.0) {
+    throw ZeroDivisionError("division by zero");
+  }
+  return float_(lhs.value() / rhs.value());
 }
 
 float_ float_::operator-() const { return float_() - *this; }

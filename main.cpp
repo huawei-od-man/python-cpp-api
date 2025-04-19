@@ -2,10 +2,11 @@
 
 int main(int argc, char const *argv[])
 {
-  ref r{false};
-
-  std::cout << r << std::endl;
-  std::cout << from_ref<int>(r);
+  function<int(int, int)> f = [](int a, int b) {
+    return a + b;
+  };
+  ref res = f(tuple{1, 2});
+  std::cout << f;
 
   return 0;
 }

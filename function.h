@@ -17,7 +17,7 @@ class function<R(Args...)> {
  public:
   template <typename F>
   function(F&& func)
-      : _func(std::forward<F>(func)), _argument_types{type<Args>()...} {}
+      : _func(std::forward<F>(func)) {}
 
   function(const function&) = default;
   function(function&&) = default;
@@ -35,7 +35,7 @@ class function<R(Args...)> {
   }
 
   friend std::ostream& operator<<(std::ostream& os, const function& obj) {
-    os << "<function" << obj._argument_types << ">";
+    os << "<function " << obj._return_type << obj._argument_types << " at " << &obj << ">";
     return os;
   }
 
@@ -47,7 +47,8 @@ class function<R(Args...)> {
     return to_ref(_func(from_ref<Args>(args[I])...));
   }
   std::function<R(Args...)> _func;
-  tuple _argument_types;
+  const tuple _argument_types{type(Args{})...};
+  const ref _return_type{type(R{})};
 };
 
 #endif  // FUNCTION_H

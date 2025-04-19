@@ -8,7 +8,7 @@ class ref;
 
 class bool_ {
  public:
-  bool_(ref obj);
+  explicit bool_(ref obj);
 
   constexpr explicit bool_(bool value) noexcept : _value(value) {}
   constexpr bool_() noexcept = default;

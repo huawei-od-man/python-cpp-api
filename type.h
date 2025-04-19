@@ -3,21 +3,31 @@
 
 #include <iostream>
 
-#include "dict.h"
 #include "forward.h"
+
+#include "dict.h"
 #include "ref.h"
 #include "str.h"
 #include "tuple.h"
 
-struct typeinfo {
-  // typeinfo(const str& name, const tuple& bases, const dict& attrs)
-  //     : name(name), bases(bases), attrs(attrs) {}
-  str name;
-  tuple bases;
-  dict attrs;
+class typeinfo {
+public:
+ explicit typeinfo(const str& name, const tuple& bases, const dict& attrs);
+
+ const str& name() const { return _name; }
+
+private:
+ str _name;
+ tuple _bases;
+ dict _attrs;
 };
 
-inline str repr(const typeinfo& obj) { return "<class '" + obj.name + "'>"; }
+inline std::ostream& operator<<(std::ostream& os, const typeinfo& obj) {
+  os << obj.name();
+  return os;
+}
+
+inline str repr(const typeinfo& obj) { return "<class '" + obj.name() + "'>"; }
 
 template <typename T>
 std::string get_type_name() {
@@ -44,11 +54,5 @@ std::string get_type_name() {
   return typeid(T).name();
 #endif
 }
-
-template<> ref type<typeinfo>();
-
-ref type(ref obj);
-
-ref type(const str& name, const tuple& bases, const dict& attrs);
 
 #endif
