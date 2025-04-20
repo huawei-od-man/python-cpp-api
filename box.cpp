@@ -1,6 +1,7 @@
 #include "box.h"
 
 #include "box.tcc"
+#include "ref.tcc"
 
 template class box<str>;
 template class box<bool_>;

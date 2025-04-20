@@ -15,5 +15,6 @@
 #include "ref.h"
 #include "type.h"
 #include "utils.h"
-
 #include "box.tcc"
+#include "ref.tcc"
+#include "type.tcc"

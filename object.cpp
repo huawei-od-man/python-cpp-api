@@ -62,8 +62,7 @@ ref object::div(ref other) const {
 }
 
 void object::format(std::ostream& os) const {
-  const auto& tp = from_ref<::typeinfo>(this->type());
-  os << "<" << tp.name() << " object at " << this << ">";
+  os << "<" << type() << " object at " << this << ">";
 }
 
 std::ostream& operator<<(std::ostream& os, const object& obj) {
@@ -72,7 +71,7 @@ std::ostream& operator<<(std::ostream& os, const object& obj) {
 }
 
 ref type(const object&){
-  static const auto object_type = to_ref(typeinfo{"object", tuple{}, dict{}});
+  static const auto object_type = type("object", tuple{}, dict{});
   return object_type;
 }
 
