@@ -18,3 +18,7 @@ std::ostream& operator<<(std::ostream& os, const ref& r) {
 bool ref::operator<(const ref& other) const { return _ptr->lt(other); }
 
 bool ref::operator>(const ref& other) const { return false; }
+
+Any::Any(const Any&& other) noexcept : r(other.r) {}
+
+Any::Any(Any& other) noexcept : r(other.r) {}

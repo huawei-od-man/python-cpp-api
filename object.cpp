@@ -78,3 +78,7 @@ ref type(const object&){
 ref object::type() const {
   return ::type(*this);
 }
+
+size_t hash(const object& value) { return reinterpret_cast<size_t>(&value); }
+
+size_t object::hash() const { return ::hash(*this); }

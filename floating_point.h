@@ -1,10 +1,10 @@
 #ifndef FLOATING_POINT_H
 #define FLOATING_POINT_H
-
 #include <cfloat>
 #include <iostream>
+#include <utility>
 
-#include "forward.h"
+class ref;
 
 class float_ {
  public:
@@ -37,16 +37,13 @@ class float_ {
   static constexpr float_ maximum() noexcept { return float_(LDBL_MAX); }
   static constexpr float_ epsilon() noexcept { return float_(LDBL_EPSILON); }
 
-  friend std::ostream& operator<<(std::ostream& os, const float_& f) {
-    os << f.value();
-    return os;
-  }
-
  private:
   long double _value{};
 };
 
 inline float_ operator""_f(long double value) { return float_(value); }
+
+std::ostream& operator<<(std::ostream& os, const float_& f);
 
 float_ operator/(const float_& lhs, const float_& rhs);
 float_ operator+(const float_& lhs, const float_& rhs);
@@ -58,10 +55,12 @@ bool operator<(const float_& lhs, const float_& rhs);
 
 namespace std {
 template <>
-struct hash<float_> {
-  size_t operator()(const float_& f) const noexcept {
-    return std::hash<long double>{}(f.value());
+struct hash<::float_> {
+  size_t operator()(const ::float_& f) const noexcept {
+    auto value = f.value();
+    return hash<decltype(value)>{}(value);
   }
 };
 }  // namespace std
+
 #endif  // FLOATING_POINT_H

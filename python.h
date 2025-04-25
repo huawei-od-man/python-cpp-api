@@ -18,3 +18,4 @@
 #include "box.tcc"
 #include "ref.tcc"
 #include "type.tcc"
+#include "hash.tcc"

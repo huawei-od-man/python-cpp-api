@@ -63,6 +63,18 @@ ref type(const tuple&);
 
 str repr(const object& value);
 
+template <typename T>
+size_t hash(const T& value);
+
+size_t hash(const typeinfo& value);
+size_t hash(const ref& value);
+size_t hash(const object& value);
+size_t hash(const set& value);
+size_t hash(const tuple& value);
+size_t hash(const list& value);
+size_t hash(const dict& value);
+size_t hash(const NoneType& value);
+
 extern const ref None, True, False;
 
 class Exception;

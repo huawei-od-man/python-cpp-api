@@ -27,12 +27,13 @@ class tuple {
 
   const ref& operator[](size_t index) const;
 
-const ref& operator[](size_t index) {
+  const ref& operator[](size_t index) {
     return const_cast<const tuple&>(*this)[index];
   }
 
   tuple slice(size_t start, size_t end = -1) const;
 
+  const std::vector<ref>& value() const { return _items; }
   friend tuple operator+(const tuple& lhs, const tuple& rhs);
 
   friend bool operator<(const tuple& lhs, const tuple& rhs) noexcept;
@@ -41,6 +42,8 @@ const ref& operator[](size_t index) {
   friend bool operator>=(const tuple& lhs, const tuple& rhs) noexcept;
   friend bool operator==(const tuple& lhs, const tuple& rhs) noexcept;
   friend bool operator!=(const tuple& lhs, const tuple& rhs) noexcept;
+
+  // friend size_t hash(const tuple& value);
 
  private:
   std::vector<ref> _items;

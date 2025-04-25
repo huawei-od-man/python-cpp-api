@@ -19,7 +19,7 @@ str str::format(const tuple& args) const {
         throw IndexError("Index out of range");
       }
       oss << args[index++];
-      ++i;  // Skip the '}'
+      ++i;
     } else {
       oss << _string[i];
     }
@@ -30,4 +30,8 @@ str str::format(const tuple& args) const {
 ref type(const str&) {
   static const auto str_type = ::type("str", {}, {});
   return str_type;
+}
+
+str operator""_s(const char* s, size_t size) {
+  return str(std::string_view(s, size));
 }

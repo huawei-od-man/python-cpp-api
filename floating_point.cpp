@@ -1,17 +1,23 @@
 #include "floating_point.h"
 
+#include <iostream>
+
+#include "dict.h"
 #include "except.h"
 #include "ref.h"
 #include "str.h"
 #include "tuple.h"
-#include "dict.h"
-
 
 float_::float_(ref obj) : float_(obj->to_float()) {}
 
-ref type(const float_ &) {
+ref type(const float_&) {
   static const auto float_type = ::type("float", tuple{}, dict{});
   return float_type;
+}
+
+std::ostream& operator<<(std::ostream& os, const float_& f) {
+  os << f.value();
+  return os;
 }
 
 bool operator==(const float_& lhs, const float_& rhs) {
@@ -51,3 +57,4 @@ float_ operator/(const float_& lhs, const float_& rhs) {
 }
 
 float_ float_::operator-() const { return float_() - *this; }
+

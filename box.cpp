@@ -2,6 +2,8 @@
 
 #include "box.tcc"
 #include "ref.tcc"
+#include "hash.tcc"
+#include "type.tcc"
 
 template class box<str>;
 template class box<bool_>;

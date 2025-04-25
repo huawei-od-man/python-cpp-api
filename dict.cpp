@@ -3,9 +3,12 @@
 #include <ostream>
 
 #include "except.h"
-#include "ref.h"
 #include "tuple.h"
 #include "str.h"
+
+dict::dict() noexcept = default;
+
+dict::~dict() noexcept = default;
 
 ref& dict::operator[](Any key) {
     const auto it = _map.find(key);
@@ -13,6 +16,10 @@ ref& dict::operator[](Any key) {
         return it->second;
     }
     throw KeyError("Key not found");
+}
+
+const ref& dict::operator[](Any key) const {
+  return const_cast<const dict&>(*this)[key];
 }
 
 std::ostream& operator<<(std::ostream& os, const dict& obj) {

@@ -2,8 +2,8 @@
 #define REF_TCC
 #include <type_traits>
 
-#include "ref.h"
 #include "box.h"
+#include "ref.h"
 
 template <typename T>
 ref to_ref(T&& value) {

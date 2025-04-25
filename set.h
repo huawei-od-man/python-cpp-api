@@ -25,6 +25,8 @@ class set {
 
   friend std::ostream& operator<<(std::ostream& os, const set& obj);
 
+  const std::unordered_set<ref>& value() const { return _items; }
+
  private:
   std::unordered_set<ref> _items;
 };

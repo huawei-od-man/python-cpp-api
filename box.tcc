@@ -87,17 +87,6 @@ struct has_lt_method<
     T, std::void_t<decltype(std::declval<T>() < std::declval<T>())>>
     : std::true_type {};
 
-// Primary template: Default case, assumes no specialization exists
-template <typename T, typename = void>
-struct has_specialized_hash : std::false_type {};
-
-// Specialization: Checks if std::hash<T> is well-formed
-template <typename T>
-struct has_specialized_hash<T,
-                            std::void_t<decltype(std::declval<std::hash<T>>()(
-                                std::declval<const T&>()))>> : std::true_type {
-};
-
 template <typename T, typename = void>
 struct has_add_method : std::false_type {};
 
@@ -183,9 +172,9 @@ ref box<T>::add(ref other) const {
 
 template <typename T>
 std::size_t box<T>::hash() const {
-  if constexpr (has_specialized_hash<T>::value) {
-    return std::hash<T>{}(_value);
-  } else {
+  try {
+    return ::hash(_value);
+  } catch (NotImplementedError&) {
     return object::hash();
   }
 }

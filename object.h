@@ -21,7 +21,7 @@ class object {
 
   virtual float_ to_float() const;
 
-  virtual std::size_t hash() const { return reinterpret_cast<uintptr_t>(this); }
+  virtual std::size_t hash() const;
   virtual std::size_t size() const;
   virtual void format(std::ostream& os) const;
 

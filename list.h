@@ -30,6 +30,8 @@ class list {
 
   explicit operator bool() const noexcept { return !_items.empty(); }
 
+  const std::vector<ref>& value() const { return _items; }
+
  private:
   std::vector<ref> _items;
 };

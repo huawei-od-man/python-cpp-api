@@ -1,7 +1,7 @@
 #ifndef BOOL_H
 #define BOOL_H
 
-#include <ostream>
+#include <iosfwd>
 #include <utility>
 
 class ref;
@@ -25,30 +25,17 @@ class bool_ {
   constexpr bool operator==(const bool_& other) const noexcept {
     return value() == other.value();
   }
-  constexpr bool operator!=(const bool_& other) const noexcept {
-    return value() != other.value();
-  }
-  constexpr bool operator==(bool other) const noexcept {
-    return value() == other;
-  }
-  constexpr bool operator!=(bool other) const noexcept {
-    return value() != other;
-  }
-  friend std::ostream& operator<<(std::ostream& os, const bool_& b) {
-    return os << (b.value() ? "True" : "False");
+  constexpr bool operator<(const bool_& other) const noexcept {
+    return value() < other.value();
   }
 
  private:
   bool _value{false};
 };
 
-namespace std {
-template <>
-struct hash<bool_> {
-  size_t operator()(const bool_& b) const noexcept {
-    return std::hash<bool>{}(b.value());
-  }
-};
-}  // namespace std
+extern const ref True, False;
+
+std::ostream& operator<<(std::ostream& os, const bool_& b);
+
 
 #endif

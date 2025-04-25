@@ -8,6 +8,11 @@ class int_ {
   constexpr int_() noexcept = default;
   ~int_() noexcept = default;
   constexpr int_(int64_t value) noexcept : _value(value) {}
+  constexpr int_(uint64_t value) noexcept : _value(value) {}
+  constexpr int_(size_t value) noexcept : _value(value) {}
+  constexpr int_(int32_t value) noexcept : _value(value) {}
+  constexpr int_(uint32_t value) noexcept : _value(value) {}
+
   constexpr int_(const int_&) noexcept = default;
   constexpr int_(int_&&) noexcept = default;
   constexpr int_& operator=(const int_&) noexcept = default;
@@ -15,6 +20,7 @@ class int_ {
 
   constexpr explicit operator bool() const noexcept { return _value != 0; }
   constexpr explicit operator int64_t() const noexcept { return _value; }
+  constexpr int64_t value() const noexcept { return _value; }
   constexpr explicit operator int() const noexcept {
     return static_cast<int>(_value);
   }
@@ -55,5 +61,15 @@ class int_ {
 inline int_ operator""_i(unsigned long long value) {
   return int_(static_cast<int64_t>(value));
 }
+
+namespace std {
+template <>
+struct hash<::int_> {
+  size_t operator()(const ::int_& i) const noexcept {
+    auto value = i.value();
+    return hash<decltype(value)>{}(value);
+  }
+};
+}  // namespace std
 
 #endif
