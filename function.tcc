@@ -23,13 +23,28 @@ std::tuple<Args...> tuple::unpack() const {
 
 template <typename Ret, typename... Args>
 function::function(Ret (*func)(Args...)) {
-  _hash = reinterpret_cast<uintptr_t>(func);
   _value = [func](const tuple& args) -> ref {
     if (args.size() != sizeof...(Args)) {
       throw TypeError("Argument count mismatched!");
     }
     return to_ref(std::apply(func, args.unpack<Args...>()));
   };
+}
+
+template <typename Ret, typename T, typename... Args>
+function::function(Ret (T::*func)(Args...)) {
+  _value = [func](const tuple& args) -> ref {
+    if (args.size() != 1 + sizeof...(Args)) {
+      throw TypeError("Argument count mismatched!");
+    }
+    // return to_ref(std::apply([], args.slice(1).unpack<Args...>()));
+    return None;
+  };
+}
+
+template <typename Ret, typename T, typename... Args>
+function::function(Ret (T::*func)(Args...) const) {
+
 }
 
 #endif  // FUNCTION_TCC

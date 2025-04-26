@@ -4,6 +4,9 @@
 
 #include "box.h"
 #include "ref.h"
+#include "bool.h"
+#include "floating_point.h"
+#include "int.h"
 
 template <typename T>
 ref to_ref(T&& value) {

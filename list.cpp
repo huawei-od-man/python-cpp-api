@@ -5,6 +5,8 @@
 #include "except.h"
 #include "tuple.h"
 #include "dict.h"
+#include "function.tcc"
+#include "box.tcc"
 
 list::list(std::initializer_list<Any> items) {
   _items.reserve(items.size());
@@ -49,6 +51,10 @@ void list::sort(bool reverse) {
 }
 
 ref type(const list&) {
-  static const auto list_type = ::type("list", tuple{}, dict{});
+  static const auto list_type = ::type("list", tuple{}, dict{
+    {"append", function(&list::append)},
+    {"sort", function(&list::sort)},
+    {"__len__", function(&list::size)},
+  });
   return list_type;
 }

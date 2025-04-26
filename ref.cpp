@@ -22,3 +22,7 @@ bool ref::operator>(const ref& other) const { return false; }
 Any::Any(const Any&& other) noexcept : r(other.r) {}
 
 Any::Any(Any& other) noexcept : r(other.r) {}
+
+ref to_ref(ref r) { return r; }
+
+ref to_ref(Any any) { return static_cast<ref>(any); }

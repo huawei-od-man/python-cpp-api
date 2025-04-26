@@ -14,7 +14,8 @@
 #include "set.h"
 #include "str.h"
 #include "tuple.h"
-#include "type.h"
+#include "type.tcc"
+#include "hash.tcc"
 
 // 通用模板：提取函数签名
 template <typename T>

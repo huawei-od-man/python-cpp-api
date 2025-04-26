@@ -6,6 +6,9 @@ int add(int i, int j) { return i + j;
 }
 int main(int argc, char const *argv[])
 {
+  ref tp = type(list{});
+  std::cout << from_ref<typeinfo>(tp).attrs();
+  
   function f(&add);
 
   std::cout << f << std::endl;

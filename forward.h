@@ -10,6 +10,10 @@ class weak_ref;
 template <typename T>
 ref to_ref(T&& value);
 
+ref to_ref(ref r);
+
+ref to_ref(Any any);
+
 template <typename T>
 std::conditional_t<std::is_scalar_v<T>, T, T&> from_ref(ref& r);
 
@@ -74,7 +78,6 @@ size_t hash(const tuple& value);
 size_t hash(const list& value);
 size_t hash(const dict& value);
 size_t hash(const NoneType& value);
-size_t hash(const function& value);
 
 extern const ref None, True, False;
 

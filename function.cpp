@@ -6,8 +6,6 @@
 
 ref function::operator()(const tuple& args) { return _value(args); }
 
-size_t hash(const function& obj) { return obj._hash; }
-
 std::ostream& operator<<(std::ostream& os, const function& obj) {
   return os << "<" << type(obj) << ">";
 }

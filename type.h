@@ -12,6 +12,8 @@ class typeinfo {
 
   const str& name() const { return _name; }
 
+  const dict& attrs() const { return _attrs; }
+
  private:
   str _name;
   tuple _bases;
