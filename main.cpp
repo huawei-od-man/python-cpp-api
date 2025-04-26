@@ -2,15 +2,14 @@
 
 class A {};
 
-int add(int i, int j) { return i + j;
-}
-int main(int argc, char const *argv[])
-{
+int add(int i, int j) { return i + j; }
+
+int main(int argc, char const *argv[]) {
   function list_append(&list::append);
 
   ref list_ref{list{}};
   print(list_ref);
-  for (int i = 0; i < 10;++i) {
+  for (int i = 0; i < 10; ++i) {
     list_append({list_ref, 1});
   }
   print(list_ref);
@@ -58,8 +57,6 @@ int main(int argc, char const *argv[])
   print(type(1) == type(2.0));
 
   int res = from_ref<int>(r());
-
-
 
   return 0;
 }
