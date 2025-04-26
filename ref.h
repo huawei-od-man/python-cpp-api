@@ -38,10 +38,7 @@ class ref {
 
   friend std::ostream& operator<<(std::ostream& os, const ref& r);
 
-  template <typename... Args>
-  ref operator()(Args&&... args) {
-    return _ptr->call(tuple(std::forward<Args>(args)...));
-  }
+  ref operator()(const tuple& args);
 
  private:
   std::shared_ptr<object> _ptr;

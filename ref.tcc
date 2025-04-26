@@ -7,6 +7,29 @@
 #include "floating_point.h"
 #include "int.h"
 #include "ref.h"
+#include "except.h"
+
+template <>
+inline ref make_box<bool, bool>(bool&& value) {
+  return value ? True : False;
+}
+
+template <typename T, typename... Args>
+ref make_box(Args&&... args) {
+  if constexpr (std::is_floating_point<T>::value) {
+    return ref(std::make_shared<box<float_>>(std::forward<Args>(args)...));
+  } else if constexpr (std::is_same<T, bool>::value) {
+    return ref(std::make_shared<box<bool_>>(std::forward<Args>(args)...));
+  } else if constexpr (std::is_integral<T>::value) {
+    return ref(std::make_shared<box<int_>>(std::forward<Args>(args)...));
+  } else if constexpr (std::is_same_v<std::decay_t<T>, char*>) {
+    return ref(std::make_shared<box<str>>(std::forward<Args>(args)...));
+  } else if constexpr (std::is_base_of<object, T>::value) {
+    return ref(std::make_shared<T>(std::forward<Args>(args)...));
+  } else {
+    return ref(std::make_shared<box<T>>(std::forward<Args>(args)...));
+  }
+}
 
 template <typename T>
 ref to_ref(T&& value) {

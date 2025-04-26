@@ -1,13 +1,13 @@
 #include "function.h"
 
 #include "dict.h"
-#include "ref.h"
+#include "ref.tcc"
 #include "tuple.h"
 #include "except.h"
 
 ref function::operator()(const tuple& args) {
   if (args.size() != _argument_count) {
-    throw TypeError("Argument count mismatched!");
+    throw TypeError("Argument count mismatched! {} {}"_s.format({args.size(), _argument_count}));
   }
   return _value(args);
 }

@@ -45,6 +45,8 @@ class str {
     return lhs._string < rhs._string;
   }
 
+  str operator*(size_t n) const;
+
   size_t hash() const {
     return std::hash<std::string>{}(_string);
   }
@@ -107,6 +109,7 @@ class str {
 
   // str replace()
  private:
+
   std::string _string;
 };
 

@@ -3,8 +3,8 @@
 #include <iostream>
 
 #include "box.tcc"
-#include "ref.tcc"
 #include "hash.tcc"
+#include "ref.tcc"
 
 typeinfo::typeinfo(const str& name, const tuple& bases, const dict& attrs)
     : _name(name), _bases(bases), _attrs(attrs) {}
@@ -33,4 +33,14 @@ bool operator==(const typeinfo& lhs, const typeinfo& rhs) {
 
 bool operator<(const typeinfo& lhs, const typeinfo& rhs) {
   return lhs.name() < rhs.name();
+}
+
+ref type(const NoneType&) {
+  static const auto NoneType_type = ::type("NoneType", tuple{}, dict{});
+  return NoneType_type;
+}
+
+ref type(const bool_&) {
+  static const auto bool_type = ::type("bool", tuple{}, dict{});
+  return bool_type;
 }

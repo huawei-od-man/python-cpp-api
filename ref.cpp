@@ -28,3 +28,5 @@ ref to_ref(ref r) { return r; }
 ref to_ref(Any any) { return static_cast<ref>(any); }
 
 ref to_ref(void) { return None; }
+
+ref ref::operator()(const tuple& args) { return _ptr->call(args); }

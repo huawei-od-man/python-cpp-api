@@ -18,7 +18,15 @@ int main(int argc, char const *argv[]) {
   print(list_size({list_ref}));
 
   ref int_ref{1};
-  list_append({int_ref, 1});
+  // list_append({int_ref, 1});
+
+  ref func_ref{list_append};
+
+  print("Before");
+  func_ref({list_ref, 42});
+
+  print({func_ref, list_ref});
+
 
   ref tp = type(list{});
   std::cout << from_ref<typeinfo>(tp).attrs() << std::endl;
@@ -33,7 +41,7 @@ int main(int argc, char const *argv[]) {
 
   print(f({1, 2}));
 
-  print(f({1, 2, 3}));
+  // print(f({1, 2, 3}));
 
   tuple t{1, 2, 3};
 
@@ -55,8 +63,6 @@ int main(int argc, char const *argv[]) {
   print(type(r));
 
   print(type(1) == type(2.0));
-
-  int res = from_ref<int>(r());
 
   return 0;
 }

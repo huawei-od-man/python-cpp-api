@@ -1,9 +1,6 @@
 #include "none.h"
-#include "box.tcc"
+#include "ref.tcc"
+#include "tuple.h"
+#include "dict.h"
 
 const ref None{make_box<NoneType>()};
-
-ref type(const NoneType &) {
-    static const auto NoneType_type = ::type("NoneType", tuple{}, dict{});
-    return NoneType_type;
-}
