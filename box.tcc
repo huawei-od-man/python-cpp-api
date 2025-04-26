@@ -17,50 +17,6 @@
 #include "type.tcc"
 #include "hash.tcc"
 
-// 通用模板：提取函数签名
-template <typename T>
-struct function_signature;
-
-template <typename T>
-struct lambda_signature;
-
-// 针对普通函数指针
-template <typename R, typename... Args>
-struct function_signature<R (*)(Args...)> {
-  using type = R (*)(Args...);
-};
-
-// 针对 std::function
-template <typename R, typename... Args>
-struct function_signature<std::function<R(Args...)>> {
-  using type = R (*)(Args...);
-};
-
-// 针对 lambda 或其他可调用对象
-template <typename T>
-struct function_signature : lambda_signature<decltype(&T::operator())> {};
-
-template <typename C, typename R, typename... Args>
-struct lambda_signature<R (C::*)(Args...) const> {
-  using type = R (*)(Args...);
-};
-
-template <typename C, typename R, typename... Args>
-struct lambda_signature<R (C::*)(Args...)> {
-  using type = R (*)(Args...);
-};
-
-// 针对成员函数指针
-template <typename C, typename R, typename... Args>
-struct function_signature<R (C::*)(Args...) const> {
-  using type = R (*)(const C&, Args...);
-};
-
-template <typename C, typename R, typename... Args>
-struct function_signature<R (C::*)(Args...)> {
-  using type = R (*)(C&, Args...);
-};
-
 template <typename T, typename = void>
 struct has_call_method : std::false_type {};
 

@@ -2,11 +2,11 @@
 #define REF_TCC
 #include <type_traits>
 
-#include "box.h"
-#include "ref.h"
 #include "bool.h"
+#include "box.h"
 #include "floating_point.h"
 #include "int.h"
+#include "ref.h"
 
 template <typename T>
 ref to_ref(T&& value) {
@@ -16,7 +16,9 @@ ref to_ref(T&& value) {
 
 template <typename T>
 std::conditional_t<std::is_scalar_v<T>, T, T&> from_ref(ref& r) {
-  if constexpr (std::is_same_v<T, bool>) {
+  if constexpr (std::is_same_v<T, ref>) {
+    return r;
+  } else if constexpr (std::is_same_v<T, bool>) {
     if (auto ptr = std::dynamic_pointer_cast<box<bool_>>(r.value())) {
       return static_cast<T>(ptr->value());
     }

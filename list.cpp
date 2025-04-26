@@ -41,7 +41,7 @@ const ref& list::operator[](size_t index) const {
   return _items[index];
 }
 
-void list::append(Any item) { _items.push_back(item); }
+void list::append(ref item) { _items.push_back(item); }
 
 void list::sort(bool reverse) {
   std::sort(_items.begin(), _items.end(),

@@ -26,3 +26,5 @@ Any::Any(Any& other) noexcept : r(other.r) {}
 ref to_ref(ref r) { return r; }
 
 ref to_ref(Any any) { return static_cast<ref>(any); }
+
+ref to_ref(void) { return None; }

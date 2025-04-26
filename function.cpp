@@ -1,10 +1,16 @@
 #include "function.h"
 
+#include "dict.h"
 #include "ref.h"
 #include "tuple.h"
-#include "dict.h"
+#include "except.h"
 
-ref function::operator()(const tuple& args) { return _value(args); }
+ref function::operator()(const tuple& args) {
+  if (args.size() != _argument_count) {
+    throw TypeError("Argument count mismatched!");
+  }
+  return _value(args);
+}
 
 std::ostream& operator<<(std::ostream& os, const function& obj) {
   return os << "<" << type(obj) << ">";

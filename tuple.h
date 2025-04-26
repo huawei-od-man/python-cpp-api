@@ -25,9 +25,9 @@ class tuple {
   explicit operator bool() const noexcept { return size() > 0; }
   size_t size() const noexcept { return _items.size(); }
 
-  const ref& operator[](size_t index) const;
+  ref& operator[](size_t index) const;
 
-  const ref& operator[](size_t index) {
+  ref& operator[](size_t index) {
     return const_cast<const tuple&>(*this)[index];
   }
 
@@ -43,13 +43,19 @@ class tuple {
   friend bool operator==(const tuple& lhs, const tuple& rhs) noexcept;
   friend bool operator!=(const tuple& lhs, const tuple& rhs) noexcept;
 
-  template <typename... Args>
-  std::tuple<Args...> unpack() const;
+  // template <typename... Args>
+  // std::tuple<Args...> unpack() const;
 
  private:
   std::vector<ref> _items;
 };
 
 std::ostream& operator<<(std::ostream& os, const tuple& obj);
+
+template <typename... Args>
+void unpack_tuple(const tuple& tuple_in, std::tuple<Args...>& tuple_out);
+
+template <typename... Args>
+std::tuple<Args...> unpack_tuple(const tuple& tuple_in);
 
 #endif  // TUPLE_H

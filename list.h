@@ -18,7 +18,7 @@ class list {
 
   list(std::initializer_list<Any> items);
 
-  void append(Any item);
+  void append(ref item);
 
   void sort(bool reverse = false);
 

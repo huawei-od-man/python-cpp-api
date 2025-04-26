@@ -27,11 +27,11 @@ tuple::tuple(const list& items) {
   }
 }
 
-const ref& tuple::operator[](size_t index) const {
+ref& tuple::operator[](size_t index) const {
   if (index >= _items.size()) {
     throw IndexError("Index out of range");
   }
-  return _items[index];
+  return const_cast<ref&>(_items[index]);
 }
 
 std::ostream& operator<<(std::ostream& os, const tuple& obj) {
@@ -93,7 +93,7 @@ tuple tuple::slice(size_t start, size_t end) const {
     end = size();
   }
   if (start >= size() || end > size() || start > end) {
-    throw IndexError("Index out of range");
+    return {};
   }
   tuple result;
   result._items.reserve(end - start);

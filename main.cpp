@@ -6,10 +6,29 @@ int add(int i, int j) { return i + j;
 }
 int main(int argc, char const *argv[])
 {
+  function list_append(&list::append);
+
+  ref list_ref{list{}};
+  print(list_ref);
+  for (int i = 0; i < 10;++i) {
+    list_append({list_ref, 1});
+  }
+  print(list_ref);
+
+  function list_size(&list::size);
+  print(list_size({list_ref}));
+
+  ref int_ref{1};
+  list_append({int_ref, 1});
+
   ref tp = type(list{});
-  std::cout << from_ref<typeinfo>(tp).attrs();
-  
+  std::cout << from_ref<typeinfo>(tp).attrs() << std::endl;
+
   function f(&add);
+
+  function f2([](int i) { return i; });
+
+  std::cout << f2({1}) << std::endl;
 
   std::cout << f << std::endl;
 
