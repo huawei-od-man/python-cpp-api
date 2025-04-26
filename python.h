@@ -19,3 +19,4 @@
 #include "ref.tcc"
 #include "type.tcc"
 #include "hash.tcc"
+#include "function.tcc"

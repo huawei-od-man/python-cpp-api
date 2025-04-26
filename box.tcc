@@ -35,11 +35,6 @@ struct function_signature<std::function<R(Args...)>> {
   using type = R (*)(Args...);
 };
 
-template <typename R, typename... Args>
-struct function_signature<::function<R(Args...)>> {
-  using type = ref (*)(const tuple&);
-};
-
 // 针对 lambda 或其他可调用对象
 template <typename T>
 struct function_signature : lambda_signature<decltype(&T::operator())> {};
@@ -239,11 +234,6 @@ ref make_box(Args&&... args) {
     return ref(std::make_shared<box<int_>>(std::forward<Args>(args)...));
   } else if constexpr (std::is_same_v<std::decay_t<T>, char*>) {
     return ref(std::make_shared<box<str>>(std::forward<Args>(args)...));
-  } else if constexpr (has_call_method<T>::value) {
-    using function_type =
-        std::remove_pointer_t<typename function_signature<T>::type>;
-    return ref(std::make_shared<box<function<function_type>>>(
-        std::forward<Args>(args)...));
   } else if constexpr (std::is_base_of<object, T>::value) {
     return ref(std::make_shared<T>(std::forward<Args>(args)...));
   } else {

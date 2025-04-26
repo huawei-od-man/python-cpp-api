@@ -5,6 +5,12 @@
 #include "object.h"
 
 template <typename T>
+struct is_box : std::false_type {};
+
+template <typename T>
+struct is_box<box<T>> : std::true_type {};
+
+template <typename T>
 class box : public object {
   static_assert(!std::is_base_of<object, T>::value,
                 "T must not be derived from object");
@@ -15,6 +21,7 @@ class box : public object {
   static_assert(!std::is_volatile_v<T>, "T must not be volatile");
   static_assert(!std::is_same_v<T, ref>, "T must not be ref");
   static_assert(!std::is_same_v<T, Any>, "T must not be Any");
+  static_assert(!is_box<T>::value, "T must not be box");
 
  public:
   box() noexcept(noexcept(T())) = default;

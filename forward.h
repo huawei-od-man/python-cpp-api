@@ -39,7 +39,6 @@ class iterator;
 class bytes;
 class byte_array;
 class NoneType;
-template <typename F>
 class function;
 
 template <typename T>
@@ -60,6 +59,7 @@ ref type(const list&);
 ref type(const set&);
 ref type(const NoneType&);
 ref type(const tuple&);
+ref type(const function&);
 
 str repr(const object& value);
 
@@ -74,6 +74,7 @@ size_t hash(const tuple& value);
 size_t hash(const list& value);
 size_t hash(const dict& value);
 size_t hash(const NoneType& value);
+size_t hash(const function& value);
 
 extern const ref None, True, False;
 

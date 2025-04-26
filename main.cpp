@@ -2,8 +2,18 @@
 
 class A {};
 
+int add(int i, int j) { return i + j;
+}
 int main(int argc, char const *argv[])
 {
+  function f(&add);
+
+  std::cout << f << std::endl;
+
+  print(f({1, 2}));
+
+  print(f({1, 2, 3}));
+
   tuple t{1, 2, 3};
 
   print(hash(t));

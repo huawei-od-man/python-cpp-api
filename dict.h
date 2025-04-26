@@ -25,8 +25,8 @@ class dict {
 
   const ref& operator[](Any key) const;
 
-  size_t size() const noexcept { return _map.size(); }
-  explicit operator bool() const noexcept { return !_map.empty(); }
+  size_t size() const noexcept { return _items.size(); }
+  explicit operator bool() const noexcept { return !_items.empty(); }
 
   friend std::ostream& operator<<(std::ostream& os, const dict& obj);
 
@@ -51,7 +51,7 @@ class dict {
   dict_values values() const;
 
  private:
-  std::unordered_map<ref, ref> _map;
+  std::unordered_map<ref, ref> _items;
 };
 
 #endif  // DICT_H

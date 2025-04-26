@@ -43,7 +43,8 @@ class tuple {
   friend bool operator==(const tuple& lhs, const tuple& rhs) noexcept;
   friend bool operator!=(const tuple& lhs, const tuple& rhs) noexcept;
 
-  // friend size_t hash(const tuple& value);
+  template <typename... Args>
+  std::tuple<Args...> unpack() const;
 
  private:
   std::vector<ref> _items;

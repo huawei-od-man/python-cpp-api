@@ -11,8 +11,8 @@ dict::dict() noexcept = default;
 dict::~dict() noexcept = default;
 
 ref& dict::operator[](Any key) {
-    const auto it = _map.find(key);
-    if (it != _map.end()) {
+    const auto it = _items.find(key);
+    if (it != _items.end()) {
         return it->second;
     }
     throw KeyError("Key not found");
@@ -25,8 +25,8 @@ const ref& dict::operator[](Any key) const {
 std::ostream& operator<<(std::ostream& os, const dict& obj) {
   os << "{";
   size_t i = 0;
-  for (const auto& [key, value] : obj._map) {
-    os << key << ": " << value << (i < obj._map.size() - 1 ? ", " : "");
+  for (const auto& [key, value] : obj._items) {
+    os << key << ": " << value << (i < obj._items.size() - 1 ? ", " : "");
     ++i;
   }
   os << "}";
@@ -38,7 +38,7 @@ dict::dict(std::initializer_list<tuple> items) {
     if (item.size() != 2) {
       throw ValueError("Dictionary items must be tuples of size 2");
     }
-    _map[item[0]] = item[1];
+    _items[item[0]] = item[1];
   }
 }
 
@@ -46,3 +46,5 @@ ref type(const dict&) {
   static const auto dict_type = ::type("dict", tuple{}, dict{});
   return dict_type;
 }
+
+void dict::clear() { _items.clear(); }
