@@ -23,11 +23,5 @@ struct NoneType {
   }
 };
 
-namespace std {
-template <>
-struct hash<NoneType> {
-  size_t operator()(const NoneType&) const noexcept { return 0; }
-};
-}  // namespace std
 
 #endif  // NONE_H

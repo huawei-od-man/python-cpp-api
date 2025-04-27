@@ -53,14 +53,4 @@ float_ operator*(const float_& lhs, const float_& rhs);
 bool operator==(const float_& lhs, const float_& rhs);
 bool operator<(const float_& lhs, const float_& rhs);
 
-namespace std {
-template <>
-struct hash<::float_> {
-  size_t operator()(const ::float_& f) const noexcept {
-    auto value = f.value();
-    return hash<decltype(value)>{}(value);
-  }
-};
-}  // namespace std
-
 #endif  // FLOATING_POINT_H
