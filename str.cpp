@@ -172,13 +172,6 @@ bool str::isalpha() const {
   return true;
 }
 
-bool str::isascii() const {
-  for (char c : _string) {
-    if (static_cast<unsigned char>(c) > 127) return false;
-  }
-  return true;
-}
-
 bool str::isdecimal() const {
   if (_string.empty()) return false;
   for (char c : _string) {
@@ -292,6 +285,6 @@ str str::operator*(size_t n) const {
 }
 
 std::ostream& operator<<(std::ostream& os, const str& obj) {
-  os << obj._string;
+  os << obj.value();
   return os;
 }

@@ -1,6 +1,7 @@
 #include "list.h"
 
 #include <iostream>
+#include <algorithm> // sort
 
 #include "except.h"
 #include "tuple.h"

@@ -71,8 +71,6 @@ class str {
 
   bool isalpha() const;
 
-  bool isascii() const;
-
   bool isdecimal() const;
 
   bool isdigit() const;
