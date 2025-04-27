@@ -1,6 +1,7 @@
 #include "tuple.h"
 
 #include <utility>
+#include <iostream>
 
 #include "dict.h"
 #include "except.h"

@@ -23,12 +23,12 @@ class ref {
   ref& operator=(const ref&) noexcept = default;
   ref& operator=(ref&&) noexcept = default;
 
-  constexpr object* operator->() const { return _ptr.get(); }
+  object* operator->() const noexcept { return _ptr.get(); }
 
   explicit operator bool() const { return static_cast<bool>(_ptr->to_bool()); }
 
   const std::shared_ptr<object>& value() const noexcept { return _ptr; }
-  const object* get() const { return _ptr.get(); }
+  const object* get() const noexcept { return _ptr.get(); }
 
   bool operator==(const ref& other) const;
   bool operator!=(const ref& other) const;

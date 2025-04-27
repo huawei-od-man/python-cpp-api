@@ -2,7 +2,8 @@
 #define TUPLE_H
 
 #include <initializer_list>
-#include <ostream>
+#include <iosfwd>
+#include <vector>
 
 #include "forward.h"
 #include "ref.h"

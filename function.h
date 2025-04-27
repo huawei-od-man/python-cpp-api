@@ -1,6 +1,7 @@
 #ifndef FUNCTION_H
 #define FUNCTION_H
 #include <cstdint>
+#include <type_traits>
 #include <functional>
 #include <iosfwd>
 
@@ -31,6 +32,8 @@ class function {
   function(function&&) = default;
   function& operator=(const function&) = default;
   function& operator=(function&&) = default;
+
+  function() = default;
   ~function() = default;
 
   ref operator()(const tuple& args);
