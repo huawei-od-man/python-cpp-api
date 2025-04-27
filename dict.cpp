@@ -18,10 +18,6 @@ ref& dict::operator[](Any key) {
     throw KeyError("Key not found");
 }
 
-const ref& dict::operator[](Any key) const {
-  return const_cast<const dict&>(*this)[key];
-}
-
 std::ostream& operator<<(std::ostream& os, const dict& obj) {
   os << "{";
   size_t i = 0;

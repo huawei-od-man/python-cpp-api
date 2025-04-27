@@ -23,8 +23,6 @@ class dict {
 
   ref& operator[](Any key);
 
-  const ref& operator[](Any key) const;
-
   size_t size() const noexcept { return _items.size(); }
   explicit operator bool() const noexcept { return !_items.empty(); }
 

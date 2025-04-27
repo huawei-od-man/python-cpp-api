@@ -57,7 +57,7 @@ int main(int argc, char const *argv[]) {
   print(type(None));
   print(type(False));
 
-  print(A{});
+  // print(A{});
 
   ref r{"Hello"};
   print(type(r));
