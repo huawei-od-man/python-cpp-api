@@ -1,8 +1,7 @@
 #ifndef STR_H
 #define STR_H
 #include <string>
-#include <utility>
-#include <iostream>
+#include <iosfwd>
 
 #include "forward.h"
 
@@ -31,11 +30,6 @@ class str {
   const char* c_str() const { return _string.c_str(); }
 
   const std::string& value() const { return _string; }
-
-  friend std::ostream& operator<<(std::ostream& os, const str& obj) {
-    os << obj._string;
-    return os;
-  }
 
   friend bool operator==(const str& lhs, const str& rhs) {
     return lhs._string == rhs._string;
@@ -107,7 +101,6 @@ class str {
 
   str upper() const;
 
-  // str replace()
  private:
 
   std::string _string;
@@ -119,5 +112,6 @@ inline str operator+(const str& lhs, const str& rhs) {
   return str(lhs.value() + rhs.value());
 }
 
+std::ostream& operator<<(std::ostream& os, const str& obj);
 
 #endif

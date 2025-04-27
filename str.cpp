@@ -2,6 +2,7 @@
 
 #include <cctype>
 #include <sstream>
+#include <iostream>
 
 #include "box.tcc"
 #include "except.h"
@@ -288,4 +289,9 @@ str str::operator*(size_t n) const {
     result += value();
   }
   return result;
+}
+
+std::ostream& operator<<(std::ostream& os, const str& obj) {
+  os << obj._string;
+  return os;
 }

@@ -10,6 +10,9 @@ class typeinfo {
  public:
   explicit typeinfo(const str& name, const tuple& bases, const dict& attrs);
 
+  typeinfo() = default;
+  ~typeinfo() = default;
+  
   const str& name() const { return _name; }
 
   const dict& attrs() const { return _attrs; }

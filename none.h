@@ -3,7 +3,8 @@
 #include <iostream>
 #include <utility>
 
-struct NoneType {
+class NoneType {
+ public:
   constexpr NoneType() noexcept = default;
   ~NoneType() noexcept = default;
 
@@ -22,6 +23,5 @@ struct NoneType {
     return false;
   }
 };
-
 
 #endif  // NONE_H

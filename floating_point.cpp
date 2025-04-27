@@ -1,5 +1,6 @@
 #include "floating_point.h"
 
+#include <cmath>
 #include <iostream>
 
 #include "dict.h"
@@ -21,7 +22,7 @@ std::ostream& operator<<(std::ostream& os, const float_& f) {
 }
 
 bool operator==(const float_& lhs, const float_& rhs) {
-  return std::fabs(lhs.value() - rhs.value()) < float_::epsilon().value();
+  return std::fabsl(lhs.value() - rhs.value()) < float_::epsilon().value();
 }
 
 bool operator<(const float_& lhs, const float_& rhs) {
