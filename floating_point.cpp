@@ -22,7 +22,7 @@ std::ostream& operator<<(std::ostream& os, const float_& f) {
 }
 
 bool operator==(const float_& lhs, const float_& rhs) {
-  return std::fabsl(lhs.value() - rhs.value()) < float_::epsilon().value();
+  return std::fabs(lhs.value() - rhs.value()) < float_::epsilon().value();
 }
 
 bool operator<(const float_& lhs, const float_& rhs) {
