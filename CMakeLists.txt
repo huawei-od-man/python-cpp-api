@@ -30,3 +30,23 @@ install(TARGETS Python
 add_executable(main main.cpp)
 
 target_link_libraries(main Python)
+cmake_minimum_required(VERSION 3.16)
+
+project(python-cpp-api)
+
+include(FetchContent)
+
+FetchContent_Declare(
+  googletest
+  GIT_REPOSITORY https://github.com/google/googletest.git
+  GIT_TAG release-1.12.1  # 使用最新的稳定版本
+)
+
+# 对于Windows用户，防止覆盖预编译的Windows运行时库
+set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
+
+FetchContent_MakeAvailable(googletest)
+
+include_directories(src)
+
+add_subdirectory(test)
