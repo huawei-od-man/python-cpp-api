@@ -1,5 +1,5 @@
 # 设置 CMake 最低版本要求
-cmake_minimum_required(VERSION 3.10)
+cmake_minimum_required(VERSION 3.16)
 
 # 设置项目名称和版本
 project(Python VERSION 1.0 LANGUAGES CXX)
@@ -30,9 +30,6 @@ install(TARGETS Python
 add_executable(main main.cpp)
 
 target_link_libraries(main Python)
-cmake_minimum_required(VERSION 3.16)
-
-project(python-cpp-api)
 
 include(FetchContent)
 
@@ -46,7 +43,5 @@ FetchContent_Declare(
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
 FetchContent_MakeAvailable(googletest)
-
-include_directories(src)
 
 add_subdirectory(test)
