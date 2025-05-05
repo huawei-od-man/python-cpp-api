@@ -18,7 +18,7 @@ class bool_ {
   constexpr bool_(bool_&&) noexcept = default;
   constexpr bool_& operator=(const bool_&) noexcept = default;
   constexpr bool_& operator=(bool_&&) noexcept = default;
-  constexpr explicit operator bool() const noexcept { return value(); }
+  constexpr /* implicit */ operator bool() const noexcept { return value(); }
   constexpr bool value() const noexcept { return _value; }
 
   constexpr bool operator!() const noexcept { return !value(); }

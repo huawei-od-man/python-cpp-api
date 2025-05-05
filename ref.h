@@ -26,6 +26,7 @@ class ref {
   object* operator->() const noexcept { return _ptr.get(); }
 
   explicit operator bool() const { return static_cast<bool>(_ptr->to_bool()); }
+  bool operator!() const { return !operator bool(); }
 
   const std::shared_ptr<object>& value() const noexcept { return _ptr; }
   const object* get() const noexcept { return _ptr.get(); }
