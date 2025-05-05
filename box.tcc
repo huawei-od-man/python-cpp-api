@@ -18,6 +18,13 @@
 #include "hash.tcc"
 
 template <typename T, typename = void>
+struct has_bool_method : std::false_type {};
+
+template <typename T>
+struct has_bool_method<T, std::void_t<decltype(static_cast<bool>(std::declval<const T&>()))>>
+    : std::true_type {};
+
+template <typename T, typename = void>
 struct has_call_method : std::false_type {};
 
 template <typename T>
@@ -97,7 +104,7 @@ void box<T>::format(std::ostream& os) const {
 
 template <typename T>
 bool box<T>::to_bool() const {
-  if constexpr (std::is_convertible<T, bool>::value) {
+  if constexpr (has_bool_method<T>::value) {
     return static_cast<bool>(_value);
   } else {
     return object::to_bool();
