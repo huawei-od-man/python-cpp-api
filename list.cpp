@@ -50,12 +50,3 @@ void list::sort(bool reverse) {
               return reverse ? a > b : a < b;
             });
 }
-
-ref type(const list&) {
-  static const auto list_type = ::type("list", tuple{}, dict{
-    {"append", function(&list::append)},
-    {"sort", function(&list::sort)},
-    {"__len__", function(&list::size)},
-  });
-  return list_type;
-}

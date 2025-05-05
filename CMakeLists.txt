@@ -65,6 +65,8 @@ if (BUILD_TEST)
     add_executable(tests
         bool_test.cpp
         str_test.cpp
+        none_test.cpp
+        floating_point_test.cpp
     )
     target_link_libraries(tests PRIVATE gtest_main Python)
     include(GoogleTest)

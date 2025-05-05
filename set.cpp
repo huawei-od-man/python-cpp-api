@@ -23,8 +23,3 @@ std::ostream& operator<<(std::ostream& os, const set& obj) {
   os << "}";
   return os;
 }
-
-ref type(const set &) {
-  static const auto set_type = ::type("set", tuple{}, dict{});
-  return set_type;
-}

@@ -11,42 +11,28 @@
 
 float_::float_(ref obj) : float_(obj->to_float()) {}
 
-ref type(const float_&) {
-  static const auto float_type = ::type("float", tuple{}, dict{});
-  return float_type;
-}
-
 std::ostream& operator<<(std::ostream& os, const float_& f) {
   os << f.value();
   return os;
 }
 
 bool operator==(const float_& lhs, const float_& rhs) {
-  return std::fabs(lhs.value() - rhs.value()) < float_::epsilon().value();
+  return lhs.value() == rhs.value();
 }
 
 bool operator<(const float_& lhs, const float_& rhs) {
-  return lhs.value() < rhs.value() + float_::epsilon().value();
+  return lhs.value() < rhs.value();
 }
 
 float_ operator+(const float_& lhs, const float_& rhs) {
-  if (lhs.value() > float_::maximum().value() - rhs.value()) {
-    throw OverflowError("float addition overflow");
-  }
   return float_(lhs.value() + rhs.value());
 }
 
 float_ operator-(const float_& lhs, const float_& rhs) {
-  if (lhs.value() < float_::minimum().value() + rhs.value()) {
-    throw UnderflowError("float subtraction underflow");
-  }
   return float_(lhs.value() - rhs.value());
 }
 
 float_ operator*(const float_& lhs, const float_& rhs) {
-  if (lhs.value() > float_::maximum().value() / rhs.value()) {
-    throw OverflowError("float multiplication overflow");
-  }
   return float_(lhs.value() * rhs.value());
 }
 
@@ -58,4 +44,3 @@ float_ operator/(const float_& lhs, const float_& rhs) {
 }
 
 float_ float_::operator-() const { return float_() - *this; }
-

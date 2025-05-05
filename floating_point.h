@@ -38,7 +38,7 @@ class float_ {
   static constexpr float_ epsilon() noexcept { return float_(LDBL_EPSILON); }
 
  private:
-  long double _value{};
+  long double _value{0.0L};
 };
 
 inline float_ operator""_f(long double value) { return float_(value); }
@@ -51,6 +51,17 @@ float_ operator-(const float_& lhs, const float_& rhs);
 float_ operator*(const float_& lhs, const float_& rhs);
 
 bool operator==(const float_& lhs, const float_& rhs);
+inline bool operator!=(const float_& lhs, const float_& rhs) {
+  return !(lhs == rhs);
+}
 bool operator<(const float_& lhs, const float_& rhs);
-
+inline bool operator>(const float_& lhs, const float_& rhs) {
+  return rhs < lhs;
+}
+inline bool operator<=(const float_& lhs, const float_& rhs) {
+  return !(lhs > rhs);
+}
+inline bool operator>=(const float_& lhs, const float_& rhs) {
+  return !(lhs < rhs);
+}
 #endif  // FLOATING_POINT_H

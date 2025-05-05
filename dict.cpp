@@ -38,9 +38,4 @@ dict::dict(std::initializer_list<tuple> items) {
   }
 }
 
-ref type(const dict&) {
-  static const auto dict_type = ::type("dict", tuple{}, dict{});
-  return dict_type;
-}
-
 void dict::clear() { _items.clear(); }

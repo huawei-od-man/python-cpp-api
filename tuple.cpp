@@ -9,11 +9,6 @@
 #include "set.h"
 #include "str.h"
 
-ref type(const tuple&) {
-  static const auto tuple_type = ::type("tuple", tuple{}, dict{});
-  return tuple_type;
-}
-
 tuple::tuple(std::initializer_list<Any> items) {
   _items.reserve(items.size());
   for (const auto& item : items) {

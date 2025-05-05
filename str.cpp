@@ -31,11 +31,6 @@ str str::format(const tuple& args) const {
   return str(oss.str());
 }
 
-ref type(const str&) {
-  static const auto str_type = ::type("str", {}, {});
-  return str_type;
-}
-
 str operator""_s(const char* s, size_t size) {
   return str(std::string_view(s, size));
 }
