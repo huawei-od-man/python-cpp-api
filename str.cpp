@@ -1,8 +1,8 @@
 #include "str.h"
 
 #include <cctype>
-#include <sstream>
 #include <iostream>
+#include <sstream>
 
 #include "box.tcc"
 #include "except.h"
@@ -220,8 +220,10 @@ bool str::istitle() const {
   if (_string.empty()) return false;
   bool new_word = true;
   for (char c : _string) {
-    if (new_word) {
-      if (!::isupper(c)) return false;
+    if (new_word && ::isalpha(c)) {
+      if (!::isupper(c)) {
+        return false;
+      }
       new_word = false;
     } else {
       if (::isupper(c)) return false;
@@ -251,10 +253,10 @@ bool str::isupper() const {
 // return result;
 // }
 
-// str str::ljust(int width, const str& fillchar) {
-//   if (width <= static_cast<int>(_string.size())) return *this;
-//   return *this + str(fillchar._string * (width - _string.size()));
-// }
+str str::ljust(int width, const str& fillchar) {
+  if (width <= static_cast<int>(_string.size())) return *this;
+  return *this + fillchar * (width - _string.size());
+}
 
 str str::lower() const { return casefold(); }
 
