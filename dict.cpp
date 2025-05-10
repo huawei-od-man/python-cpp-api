@@ -39,3 +39,7 @@ dict::dict(std::initializer_list<tuple> items) {
 }
 
 void dict::clear() { _items.clear(); }
+
+bool dict::contains(ref item) const {
+  return _items.find(item) != _items.end();
+}

@@ -19,9 +19,9 @@ class set {
 
   size_t size() const noexcept { return _items.size(); }
   void add(ref item) { _items.insert(item); }
-  void remove(ref item) { _items.erase(item); }
-  void clear() { _items.clear(); }
-  bool contains(ref item) const { return _items.find(item) != _items.end(); }
+  void remove(ref item);
+  void clear();
+  bool contains(ref item) const;
 
   friend std::ostream& operator<<(std::ostream& os, const set& obj);
 

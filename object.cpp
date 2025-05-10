@@ -70,15 +70,8 @@ std::ostream& operator<<(std::ostream& os, const object& obj) {
   return os;
 }
 
-ref type(const object&){
-  static const auto object_type = type("object", tuple{}, dict{});
-  return object_type;
-}
-
 ref object::type() const {
   return ::type(*this);
 }
-
-size_t hash(const object& value) { return reinterpret_cast<size_t>(&value); }
 
 size_t object::hash() const { return ::hash(*this); }

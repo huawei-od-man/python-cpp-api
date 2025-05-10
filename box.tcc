@@ -85,6 +85,15 @@ ref box<T>::type() const {
 }
 
 template <typename T>
+ref box<T>::copy() const {
+  if constexpr (std::is_copy_constructible_v<T>) {
+    return make_box<T>(*this);
+  } else {
+    return object::copy();
+  }
+}
+
+template <typename T>
 std::size_t box<T>::size() const {
   if constexpr (has_size_method<T>::value) {
     return _value.size();
@@ -172,6 +181,7 @@ ref box<T>::call(const tuple& args) {
     return object::call(args);
   }
 }
+
 
 extern template class box<str>;
 extern template class box<bool_>;

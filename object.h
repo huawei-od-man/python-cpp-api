@@ -37,6 +37,9 @@ class object {
 
   virtual ref next();
 
+  virtual ref copy() const;
+  virtual ref deepcopy(dict& memo) const;
+
   virtual ref add(ref other) const;
   virtual ref sub(ref other) const;
   virtual ref mul(ref other) const;

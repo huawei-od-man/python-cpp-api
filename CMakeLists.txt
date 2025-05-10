@@ -44,6 +44,7 @@ add_library(Python
     tuple.cpp
     "type.cpp"
     utils.cpp
+    copy.cpp
 )
 
 # 设置库的头文件路径
@@ -67,6 +68,7 @@ if (BUILD_TEST)
         str_test.cpp
         none_test.cpp
         floating_point_test.cpp
+        set_test.cpp
     )
     target_link_libraries(tests PRIVATE gtest_main Python)
     include(GoogleTest)

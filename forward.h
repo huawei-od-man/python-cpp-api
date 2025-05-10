@@ -2,6 +2,8 @@
 #define FORWARD_H
 #include <type_traits>
 #include <iosfwd>
+#include <initializer_list>
+#include <iostream>
 
 struct Any;
 class ref;
@@ -65,7 +67,11 @@ ref type(const NoneType&);
 ref type(const tuple&);
 ref type(const function&);
 
-str repr(const object& value);
+ref deepcopy(ref obj, dict& memo);
+ref copy(ref obj);
+
+str repr(ref obj);
+ref id(ref obj);
 
 template <typename T>
 size_t hash(const T& value);
@@ -78,6 +84,9 @@ size_t hash(const tuple& value);
 size_t hash(const list& value);
 size_t hash(const dict& value);
 size_t hash(const NoneType& value);
+
+void print(const tuple& args, std::ostream& os = std::cout);
+void print(Any arg, std::ostream& os = std::cout);
 
 extern const ref None, True, False;
 

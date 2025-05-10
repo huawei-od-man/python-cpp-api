@@ -39,6 +39,11 @@ bool operator<(const typeinfo& lhs, const typeinfo& rhs) {
   return lhs.name() < rhs.name();
 }
 
+ref type(const object&){
+  static const auto object_type = type("object", tuple{}, dict{});
+  return object_type;
+}
+
 ref type(const NoneType&) {
   static const auto NoneType_type = ::type("NoneType", tuple{}, dict{});
   return NoneType_type;

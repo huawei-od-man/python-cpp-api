@@ -37,3 +37,5 @@ size_t hash(const set& /* obj */) { throw TypeError("unhashable type: 'set'"); }
 size_t hash(const ref& obj) { return obj->hash(); }
 
 size_t hash(const NoneType& obj) { return ::hash(&obj); }
+
+size_t hash(const object& value) { return reinterpret_cast<size_t>(&value); }

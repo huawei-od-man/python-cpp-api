@@ -52,6 +52,8 @@ class box : public object {
 
   ref type() const override;
 
+  ref copy() const override;
+
   T& value() { return _value; }
   const T& value() const { return _value; }
 
