@@ -4,6 +4,8 @@
 
 struct A {};
 
+static_assert(!has_operator_insertion<A>::value, "A has no <<");
+
 TEST(TestFormat, ClassWithInsertOperator) {
   A a{};
   auto s = "{}"_s.format({a});
