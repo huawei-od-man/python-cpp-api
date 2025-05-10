@@ -19,6 +19,7 @@ template <typename R, typename... Args>
 struct function_signature<R (*)(Args...)> {
   using type = std::tuple<Args...>;
   using ret = R;
+  using index = std::index_sequence_for<Args...>;
 };
 
 // 针对 std::function
@@ -26,6 +27,7 @@ template <typename R, typename... Args>
 struct function_signature<std::function<R(Args...)>> {
   using type = std::tuple<Args...>;
   using ret = R;
+  using index = std::index_sequence_for<Args...>;
 };
 
 // 针对 lambda 或其他可调用对象
@@ -36,12 +38,14 @@ template <typename C, typename R, typename... Args>
 struct lambda_signature<R (C::*)(Args...) const> {
   using type = std::tuple<Args...>;
   using ret = R;
+  using index = std::index_sequence_for<Args...>;
 };
 
 template <typename C, typename R, typename... Args>
 struct lambda_signature<R (C::*)(Args...)> {
   using type = std::tuple<Args...>;
   using ret = R;
+  using index = std::index_sequence_for<Args...>;
 };
 
 // 针对成员函数指针
@@ -49,12 +53,14 @@ template <typename C, typename R, typename... Args>
 struct function_signature<R (C::*)(Args...) const> {
   using type = std::tuple<const C&, Args...>;
   using ret = R;
+  using index = std::index_sequence_for<Args...>;
 };
 
 template <typename C, typename R, typename... Args>
 struct function_signature<R (C::*)(Args...)> {
   using type = std::tuple<C&, Args...>;
   using ret = R;
+  using index = std::index_sequence_for<Args...>;
 };
 
 template <typename Tuple, size_t... Ids>
@@ -79,8 +85,8 @@ std::tuple<Args...> unpack_tuple(const tuple& tuple_in) {
   return tuple_out;
 }
 
-template <typename Tuple>
-Tuple unpack_tuple(const tuple& tuple_in) {}
+// template <typename Tuple>
+// Tuple unpack_tuple(const tuple& tuple_in) {}
 
 template <typename Ret, typename Func, typename T, typename Tuple,
           size_t... Ids>
@@ -94,16 +100,35 @@ ref _apply_method(Func func, T& self, const Tuple& args,
   }
 }
 
+template <typename Ret, typename Func, typename Tuple,
+          size_t... Ids>
+ref _apply_func(Func func, const Tuple& args,
+                  std::index_sequence<Ids...>) {
+  if constexpr (std::is_same_v<Ret, void>) {
+    func(std::get<Ids>(args)...);
+    return None;
+  } else {
+    return to_ref(func(std::get<Ids>(args)...));
+  }
+}
+
 template <typename Ret, typename... Args>
 function::function(Ret (*func)(Args...)) {
   _argument_count = sizeof...(Args);
   _value = [func](const tuple& args) -> ref {
-    return to_ref(std::apply(func, unpack_tuple<Args...>(args)));
+    return _apply_func<Ret>(func, unpack_tuple<Args...>(args),
+      std::index_sequence_for<Args...>());
   };
 }
 
 template <typename Ret, typename... Args>
-function::function(std::function<Ret(Args...)> func) {}
+function::function(std::function<Ret(Args...)> func) {
+  _argument_count = sizeof...(Args);
+  _value = [func = std::move(func)](const tuple& args) -> ref {
+    return _apply_func<Ret>(func, unpack_tuple<Args...>(args),
+      std::index_sequence_for<Args...>());
+  };
+}
 
 template <typename Ret, typename T, typename... Args>
 function::function(Ret (T::*func)(Args...)) {
@@ -132,11 +157,13 @@ function::function(Ret (T::*func)(Args...) const) {
 template <typename Func, typename>
 function::function(Func func) {
   using signature = typename function_signature<Func>::type;
+  using Ret = typename function_signature<Func>::ret;
+  using index = typename function_signature<Func>::index;
   _argument_count = std::tuple_size_v<signature>;
   _value = [func = std::move(func)](const tuple& args) -> ref {
     signature args_t;
     unpack_tuple(args, args_t);
-    return to_ref(std::apply(func, args_t));
+    return _apply_func<Ret>(func, args_t, index{});
   };
 }
 

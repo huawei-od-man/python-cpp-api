@@ -38,6 +38,10 @@ class function {
 
   ref operator()(const tuple& args);
 
+  size_t argument_count() const {
+      return _argument_count;
+  }
+
  private:
   friend std::ostream& operator<<(std::ostream& os, const function& obj);
 

@@ -69,6 +69,7 @@ if (BUILD_TEST)
         none_test.cpp
         floating_point_test.cpp
         set_test.cpp
+            function_test.cpp
     )
     target_link_libraries(tests PRIVATE gtest_main Python)
     include(GoogleTest)
