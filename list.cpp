@@ -16,18 +16,6 @@ list::list(std::initializer_list<Any> items) {
   }
 }
 
-std::ostream& operator<<(std::ostream& os, const list& lst) {
-  os << "[";
-  for (size_t i = 0; i < lst.size(); ++i) {
-    if (i > 0) {
-      os << ", ";
-    }
-    os << lst[i];
-  }
-  os << "]";
-  return os;
-}
-
 ref& list::operator[](size_t index) {
   if (index >= _items.size()) {
     throw IndexError("Index out of range");

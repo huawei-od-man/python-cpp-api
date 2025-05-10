@@ -18,17 +18,6 @@ ref& dict::operator[](Any key) {
     throw KeyError("Key not found");
 }
 
-std::ostream& operator<<(std::ostream& os, const dict& obj) {
-  os << "{";
-  size_t i = 0;
-  for (const auto& [key, value] : obj._items) {
-    os << key << ": " << value << (i < obj._items.size() - 1 ? ", " : "");
-    ++i;
-  }
-  os << "}";
-  return os;
-}
-
 dict::dict(std::initializer_list<tuple> items) {
   for (const auto& item : items) {
     if (item.size() != 2) {

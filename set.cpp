@@ -12,17 +12,6 @@ set::set(std::initializer_list<Any> items) {
   }
 }
 
-std::ostream& operator<<(std::ostream& os, const set& obj) {
-  os << "{";
-  size_t i = 0;
-  for (const auto& item : obj._items) {
-    os << item << (i < obj._items.size() - 1 ? ", " : "");
-    ++i;
-  }
-  os << "}";
-  return os;
-}
-
 void set::remove(ref item) {
   if (!contains(item)) {
     throw KeyError("Item not in set");

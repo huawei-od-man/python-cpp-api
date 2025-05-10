@@ -30,18 +30,6 @@ ref& tuple::operator[](size_t index) const {
   return const_cast<ref&>(_items[index]);
 }
 
-std::ostream& operator<<(std::ostream& os, const tuple& obj) {
-  os << "(";
-  for (size_t i = 0; i < obj.size(); ++i) {
-    if (i > 0) {
-      os << ", ";
-    }
-    os << obj[i];
-  }
-  os << ")";
-  return os;
-}
-
 tuple operator+(const tuple& lhs, const tuple& rhs) {
   tuple result;
   result._items.reserve(lhs.size() + rhs.size());

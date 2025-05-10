@@ -24,11 +24,6 @@ ref type(const typeinfo&) {
   return type_type;
 }
 
-std::ostream& operator<<(std::ostream& os, const typeinfo& obj) {
-  os << obj.name();
-  return os;
-}
-
 str repr(const typeinfo& obj) { return "<class '" + obj.name() + "'>"; }
 
 bool operator==(const typeinfo& lhs, const typeinfo& rhs) {

@@ -280,8 +280,3 @@ str str::operator*(size_t n) const {
   }
   return result;
 }
-
-std::ostream& operator<<(std::ostream& os, const str& obj) {
-  os << obj.value();
-  return os;
-}

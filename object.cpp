@@ -65,11 +65,6 @@ void object::format(std::ostream& os) const {
   os << "<" << type() << " object at " << this << ">";
 }
 
-std::ostream& operator<<(std::ostream& os, const object& obj) {
-  obj.format(os);
-  return os;
-}
-
 ref object::type() const {
   return ::type(*this);
 }

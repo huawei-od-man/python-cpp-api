@@ -76,7 +76,7 @@ struct has_operator_insertion : std::false_type {};
 template <typename T>
 struct has_operator_insertion<
     T,
-    std::void_t<decltype(std::declval<std::ostream&>() << std::declval<T>())>>
+    std::void_t<decltype(std::declval<std::ostream&>() << std::declval<const T&>())>>
     : std::true_type {};
 
 template <typename T>

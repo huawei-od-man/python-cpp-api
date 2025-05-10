@@ -9,6 +9,8 @@ class bytes {
 
   size_t size() const { return _data.size(); }
 
+  explicit operator bool() const { return _data.size() != 0; }
+
   bool operator==(const bytes& other) const;
 
   const std::vector<uint8_t>& value() const {
